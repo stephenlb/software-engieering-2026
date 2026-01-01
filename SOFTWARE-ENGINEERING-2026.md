@@ -4,6 +4,8 @@ Are you already behind? Probably! Let's fix that.
 
 ## TLDR Workflow
 
+![TLDR Workflow Cycle](images/01-tldr-workflow-cycle.png)
+
 ```mermaid
 flowchart LR
     A[PROMPT] --> B[REVIEW]
@@ -44,6 +46,8 @@ REPEAT:   "The redirect isn't working on mobile Safari - investigate and fix"
 
 ## The AI Reality Check
 
+![The AI Reality Check](images/15-the-ai-reality-check.png)
+
 **For non-engineers:** AI seems magical. It's a senior developer who never sleeps.
 
 **For daily engineers:** You'll see the limits:
@@ -55,6 +59,9 @@ REPEAT:   "The redirect isn't working on mobile Safari - investigate and fix"
 The gap between "runs" and "ships to production" is where expertise matters.
 
 **Productivity Paradox:**
+
+![Productivity Paradox Visualization](images/02-productivity-paradox-visualization.png)
+
 - Non-engineers see 10,000% improvement (can't build → prototype).
 - Engineers see ~20% boost.
 
@@ -77,6 +84,8 @@ Headlines are calibrated for non-engineers. AI amplifies engineers, doesn't repl
 
 ## Your Role: Director of Agents
 
+![Director of Agents Concept](images/03-director-of-agents-concept.png)
+
 The typing is solved. Now you need deeper engineering skills to guide AI effectively.
 
 **Your new responsibilities:**
@@ -88,6 +97,8 @@ The typing is solved. Now you need deeper engineering skills to guide AI effecti
 - OpenTelemetry (instrumentation)
 - Grafana (visualization)
 - Splunk (log aggregation)
+
+![Observability Stack](images/14-observability-stack.png)
 
 ## CLAUDE.md Configuration
 
@@ -106,6 +117,8 @@ Reference: https://www.anthropic.com/engineering/claude-code-best-practices
 - Parallel subagents: 2-day tasks → 4 hours
 
 ## Generative Coding Workflow
+
+![Generative Coding Workflow Pipeline](images/04-generative-coding-workflow-pipeline.png)
 
 ```mermaid
 flowchart TD
@@ -253,6 +266,8 @@ Ask AI to use linters, type checkers, test runners, and profilers.
 Security review, smoke testing, stress testing, code reduction, test coverage, documentation, dead code removal, 12 Factor coverage, observability coverage
 
 ## TDD with AI
+
+![TDD Red/Green Cycle](images/06-tdd-redgreen-cycle.png)
 
 ```mermaid
 flowchart LR
@@ -554,6 +569,9 @@ It should NEVER have access to refund or cancellation tools."
 You can write agents that write agents. Claude Code is built this way.
 
 ### Skills (Superpowers)
+
+![Skills/Superpowers Ecosystem](images/16-skillssuperpowers-ecosystem.png)
+
 Markdown files teaching agents specific tasks:
 - Agents learn by reading SKILL.md files
 - Self-improving agents write their own skills
@@ -596,6 +614,9 @@ the current branch to staging. Pause before each destructive action for confirma
 ```
 
 ### Agent Memory
+
+![Agent Memory Architecture](images/11-agent-memory-architecture.png)
+
 - Store transcripts outside .claude (prevents auto-deletion)
 - Vector index in SQLite for semantic search
 - Summarize with fast models (Haiku)
@@ -641,6 +662,8 @@ Same model in different tools produces different quality (system prompts matter)
 ### RAG (Retrieval Augmented Generation)
 AI enhanced by retrieving context from external sources before generating.
 
+![RAG Pipeline](images/07-rag-retrieval-augmented-generation-pipeline.png)
+
 ```mermaid
 flowchart TD
     subgraph Ingestion
@@ -681,6 +704,8 @@ Semantic retrieval vs keyword matching. Maps user terms to expected terminology.
 Agents/subagents, prompting, context management, RAG/embeddings, CLI modes, tools/plugins, skills/hooks, MCP, LSP, slash commands, workflows, IDE integrations
 
 ## MCP (Model Context Protocol)
+
+![MCP Architecture Diagram](images/05-mcp-architecture-diagram.png)
 
 Universal adapter letting LLMs access external systems (databases, APIs, files, tools).
 
@@ -849,6 +874,8 @@ Reference: https://google.github.io/A2A/
 
 ## LSP (Language Server Protocol)
 
+![LSP vs Text Search Comparison](images/08-lsp-vs-text-search-comparison.png)
+
 Standardized protocol for code intelligence (autocomplete, go-to-definition, diagnostics, refactoring). Created by Microsoft, now industry standard.
 
 ### Why LSP Matters for AI
@@ -887,6 +914,8 @@ Go to Definition, Find References, Hover Info, Document Symbols, Workspace Symbo
 
 ## Local LLMs
 
+![Local vs Cloud LLM Decision Matrix](images/10-local-vs-cloud-llm-decision-matrix.png)
+
 Privacy, cost savings, offline. Trade-off: lower quality than cloud.
 
 ### Popular Models (2026)
@@ -912,6 +941,8 @@ DeepSeek R1/V3, Kimi K2 (1M+ tokens), MiniMax, Llama 4, Qwen 3, Mistral Large
 - Use Q4/Q5 quantized models to reduce memory
 
 ## Context Management
+
+![Context Management Best Practices](images/09-context-management-best-practices.png)
 
 ### Avoid Compaction
 Quality drops after compaction. Keep sessions clean and focused.
@@ -1105,6 +1136,8 @@ npm install n8n -g && n8n start
 
 ## Security
 
+![AI Security Layers](images/13-ai-security-layers.png)
+
 ### Code
 - Run `/security-review` in Claude Code
 - SEMGREP in GitHub Actions: https://semgrep.dev/docs/getting-started/quickstart-managed-scans
@@ -1121,6 +1154,8 @@ npm install n8n -g && n8n start
 - Multiple layers, test regularly
 
 ## Recommended Tech Stack (2026)
+
+![2026 Tech Stack Layers](images/12-2026-tech-stack-layers.png)
 
 ### Web
 | Type | Options |
