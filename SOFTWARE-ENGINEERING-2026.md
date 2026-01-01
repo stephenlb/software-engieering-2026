@@ -8,6 +8,30 @@ This guide provides practical workflows, prompting techniques, and best practice
 
 ---
 
+## Technical Topics Covered:
+
+Look at all the things we need to know.
+Most of these topics didn't exist in 2024.
+Note this is a mix of tools, protocols, frameworks, and methodologies.
+Not just focused on AI.
+
+| Category | Concepts |
+|----------|----------|
+| **AI Tools** | Claude Code, Subagents, Background Agents, Skills, Hooks, Slash Commands |
+| **Protocols** | MCP, A2A, LSP |
+| **Frameworks** | LangChain, LangGraph, Claude Agent SDK, Inngest AgentKit |
+| **Observability** | LangFuse, LangSmith, OpenTelemetry, Grafana, Splunk, PostHog |
+| **RAG/Embeddings** | PGVector, Pinecone, Docling, Voyage |
+| **Security** | OWASP, Semgrep, PromptFoo, Guardrails |
+| **Automation** | N8N, Make, Temporal |
+| **Local LLMs** | Ollama, vLLM, LM Studio, llama.cpp |
+| **Code Quality** | Biome, Ruff, TypeScript, Clippy |
+| **Version Control** | Git Worktrees, GitHub CLI |
+| **Methodology** | TDD, 12 Factor, DRY, SRP |
+| **Optimization** | Prompt Caching, Model Routing, OpenRouter |
+| **Languages** | Rust, TypeScript, Python |
+| **Prompt Formats** | TOON, Markdown, CLAUDE.md |
+
 ## Quick Start (5-Minute Summary)
 
 **What This Guide Is:**
@@ -17,7 +41,6 @@ A practical reference for engineers working with AI coding assistants in 2026. Y
 ```
 PROMPT → REVIEW → SECURE → REDUCE → TEST → SHIP
 ```
-
 **Your New Role:** Director of Agents
 - You architect and plan; AI implements
 - You review every diff before committing
@@ -79,25 +102,6 @@ cd ../myapp-feature && claude
 - Use prompt caching (90% cost reduction on repeated prefixes)
 - Route simple queries to cheaper models (Haiku for quick tasks)
 - Use subagents for research to keep main context clean
-
-**Technical Topics Covered:**
-| Category | Concepts |
-|----------|----------|
-| **AI Tools** | Claude Code, Subagents, Background Agents, Skills, Hooks, Slash Commands |
-| **Protocols** | MCP, A2A, LSP |
-| **Frameworks** | LangChain, LangGraph, Claude Agent SDK, Inngest AgentKit |
-| **Observability** | LangFuse, LangSmith, OpenTelemetry, Grafana, Splunk, PostHog |
-| **RAG/Embeddings** | PGVector, Pinecone, Docling, Voyage |
-| **Security** | OWASP, Semgrep, PromptFoo, Guardrails |
-| **Automation** | N8N, Zapier, Make, Temporal |
-| **Local LLMs** | Ollama, vLLM, LM Studio, llama.cpp |
-| **Code Quality** | Biome, Ruff, TypeScript, Clippy |
-| **Version Control** | Git Worktrees, GitHub CLI |
-| **Methodology** | TDD, 12 Factor, DRY, SRP |
-| **Optimization** | Prompt Caching, Model Routing, OpenRouter |
-| **Languages** | Rust, TypeScript, Python |
-| **Formats** | TOON, Markdown, CLAUDE.md |
-
 **Jump To:**
 - [Detailed Workflow](#tldr-workflow) - The full PROMPT→SHIP cycle
 - [Claude Code Features](#claude-code-features) - Hooks, slash commands, subagents
