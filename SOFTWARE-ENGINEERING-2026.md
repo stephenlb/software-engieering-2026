@@ -30,6 +30,7 @@ Also don't miss the [Best Tips and Tricks](#best-tips-and-tricks) section for qu
 - [Quick Start (5-Minute Summary)](#quick-start-5-minute-summary)
 - [Best Tips and Tricks](#best-tips-and-tricks)
 - [Introduction](#introduction)
+- [Automate Everything You Do](#automate-everything-you-do)
 - [TLDR Workflow](#tldr-workflow)
 - [The AI Reality Check](#the-ai-reality-check)
 - [Your Role: Director of Agents](#your-role-director-of-agents)
@@ -1052,7 +1053,7 @@ echo "API_KEY: ${API_KEY:+[REDACTED]}"
 
 ### Using Scripts with AI
 ```
-\"I'm seeing 500 errors. Here's the output from my debug scripts:
+"I'm seeing 500 errors. Here's the output from my debug scripts:
 
 ./scripts/logs.sh api 10
 [paste output]
@@ -1060,7 +1061,7 @@ echo "API_KEY: ${API_KEY:+[REDACTED]}"
 ./scripts/debug.sh
 [paste output]
 
-What's the likely cause?\"
+What's the likely cause?"
 ```
 
 **Provide debug info from:** Server logs, browser console, network dev tools
@@ -2296,7 +2297,7 @@ ollama serve
 
 # Pull models
 ollama pull llama3.2           # 3B - Fast, good for simple tasks
-ollama pull llama3.2:70b       # 70B - Better quality, needs GPU
+ollama pull llama4:70b         # 70B - Better quality, needs GPU
 ollama pull deepseek-coder-v2  # Excellent for code
 ollama pull qwen2.5-coder      # Good code model, multilingual
 ollama pull nomic-embed-text   # Embeddings for RAG
@@ -2352,7 +2353,7 @@ print(response.choices[0].message.content)
 |----------|-------------------|-----|
 | Code completion | deepseek-coder-v2, qwen2.5-coder | Trained on code |
 | General chat | llama3.2, mistral | Good balance |
-| Long context | kimi-k2, llama3.2:70b | 128K+ context |
+| Long context | kimi-k2, llama4:70b | 128K+ context |
 | Embeddings | nomic-embed-text | Fast, good quality |
 | Reasoning | deepseek-r1 | Chain-of-thought |
 
@@ -2364,8 +2365,8 @@ Create a custom MCP server for local model access, or use OpenRouter to route be
 # Local model for quick tasks, cloud for complex
 def smart_route(prompt: str, complexity: str = "auto"):
     if complexity == "simple" or len(prompt) < 100:
-        # Use local Ollama
-        return ollama_client.chat(model="llama3.2", messages=[...])
+        # Use local Ollama (OpenAI-compatible API)
+        return ollama_client.chat.completions.create(model="llama4", messages=[...])
     else:
         # Use Claude for complex tasks
         return anthropic_client.messages.create(model="claude-sonnet-4-20250514", ...)
