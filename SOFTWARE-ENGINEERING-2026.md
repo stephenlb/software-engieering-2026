@@ -184,14 +184,17 @@ cd ../myapp-feature && claude
 # 4. Review the diff
 > "/review"
 
-# 5. Security check
+# 5. Reduce code
+> "Simplify the middleware. Remove duplication. Ensure single responsibility principle."
+
+# 6. Security check
 > "Review for auth vulnerabilities: token storage, expiry, CSRF"
 
-# 6. Test
+# 7. Test
 > "Write tests for the auth middleware, then run them"
 
-# 7. Ship
-> "/pr"
+# 8. Ship
+> "Create a PR with summary of changes"
 ```
 
 **Golden Rules:**
@@ -200,6 +203,7 @@ cd ../myapp-feature && claude
 3. AI writes it, you own it
 4. Security review is mandatory
 5. `/clear` often to keep context clean
+6. Reduce code complexity and verbosity
 
 **Cost Optimization:** See [Token Optimization](#token-optimization) and [Best Tips](#best-tips-and-tricks).
 
@@ -224,16 +228,15 @@ In 2026, AI doesn't just write code, it handles every artifact in your workflow.
 | **Documentation** | Generate from code comments, types, and tests |
 | **Diagrams** | Mermaid, PlantUML, D2 from natural language |
 | **Presentations** | Gamma.app, Beautiful.ai, Claude + reveal.js |
-| **Images** | DALL-E, Midjourney, Ideogram, Flux |
-| **Icons/Logos** | Recraft, IconifyAI |
+| **Images/Icons/Logos** | Gemini 3, OpenAI Image Gen 1.5 |
 | **API Specs** | Generate OpenAPI from code or vice versa |
 | **Test Data** | Synthetic data generation with Faker + AI |
 | **Database Migrations** | AI writes migration scripts from schema changes |
-| **Commit Messages** | `/commit` command in Claude Code |
-| **PR Descriptions** | `/pr` command auto-generates summaries |
+| **Commit Messages** | "Commit these changes" or custom `/commit` skill |
+| **PR Descriptions** | "Create a PR" or custom `/pr` skill |
 | **Release Notes** | Generate from commit history and PRs |
 | **Runbooks** | AI documents your incident response |
-| **Meeting Notes** | Otter.ai, Fireflies, Claude summarization |
+| **Meeting Notes** | NotebookLM, Claude summarization |
 | **Emails/Slack** | Draft responses, summarize threads |
 | **Code Reviews** | Automated PR review with Claude GitHub app |
 | **Refactoring** | AI identifies and executes improvements |
@@ -340,6 +343,8 @@ REPEAT:   "Redirect broken on mobile Safari - fix"
 
 **For daily engineers:** You'll see the limits. AI produces plausible code that needs review, doesn't understand your architecture without guidance, and requires discipline for production-quality results. The gap between "runs" and "ships to production" is where expertise matters.
 
+For example when asking Claude to build an AI Agent with Tool calling, it produces code that may work, however it often uses old models for the Agent.
+
 **Productivity Paradox:**
 
 ![Productivity Paradox Visualization](images/02-productivity-paradox-visualization.png)
@@ -360,8 +365,9 @@ The typing is solved. Now you need deeper engineering skills to guide AI effecti
 - Provide approvals as Director of Agents
 
 **Observability is critical.** AI code may work but fail silently. Use:
-- OpenTelemetry (instrumentation)
+- Prometheus (metrics)
 - Grafana (visualization)
+- OpenTelemetry (instrumentation)
 - Splunk (log aggregation)
 
 ![Observability Stack](images/14-observability-stack.png)
@@ -441,24 +447,121 @@ Reference: https://www.anthropic.com/engineering/claude-code-best-practices
 ## Claude Code Features
 
 ### Slash Commands
-Built-in commands that trigger specific workflows:
+Built-in commands that trigger specific workflows.
 
+Reference: https://code.claude.com/docs/en/slash-commands
+
+> **Note:** The commands below are built-in to Claude Code. For custom commands like `/commit` or `/pr`, see [Custom Slash Commands](#custom-slash-commands) below. Many common workflows (committing, creating PRs) can also be done via natural language: "Commit these changes" or "Create a PR".
+
+**Essential Commands:**
 | Command | Purpose |
 |---------|---------|
-| `/help` | Show available commands |
-| `/clear` | Clear conversation context |
-| `/compact` | Summarize and compress context |
-| `/review` | Review recent changes |
-| `/pr` | Create a pull request |
-| `/commit` | Commit staged changes |
-| `/security-review` | Security audit of code |
-| `/install-github-app` | Install Claude GitHub integration |
+| `/help` | Get usage help |
+| `/clear` | Clear conversation history |
+| `/compact [instructions]` | Compact conversation with optional focus instructions |
+| `/review` | Request code review |
+| `/security-review` | Complete security review of pending changes |
+| `/init` | Initialize project with `CLAUDE.md` guide |
+| `/install-github-app` | Set up Claude GitHub Actions for a repository |
 
-**Custom Slash Commands:**
-Create project-specific commands in `.claude/commands/`:
+**Session & Context:**
+| Command | Purpose |
+|---------|---------|
+| `/resume [session]` | Resume a conversation by ID or name |
+| `/rename <name>` | Rename the current session |
+| `/export [filename]` | Export conversation to file or clipboard |
+| `/context` | Visualize current context usage |
+| `/rewind` | Rewind conversation and/or code |
+
+**Configuration & Status:**
+| Command | Purpose |
+|---------|---------|
+| `/config` | Open Settings interface (Config tab) |
+| `/status` | Show version, model, account, connectivity |
+| `/model` | Select or change the AI model |
+| `/permissions` | View or update permissions |
+| `/mcp` | Manage MCP server connections |
+| `/hooks` | Manage hook configurations |
+| `/memory` | Edit `CLAUDE.md` memory files |
+
+**Utilities:**
+| Command | Purpose |
+|---------|---------|
+| `/cost` | Show token usage statistics |
+| `/usage` | Show plan usage limits (subscription only) |
+| `/stats` | Visualize daily usage, session history, streaks |
+| `/todos` | List current TODO items |
+| `/doctor` | Check installation health |
+| `/bug` | Report bugs (sends conversation to Anthropic) |
+
+**Environment:**
+| Command | Purpose |
+|---------|---------|
+| `/add-dir` | Add additional working directories |
+| `/ide` | Manage IDE integrations |
+| `/sandbox` | Enable sandboxed bash with isolation |
+| `/terminal-setup` | Install Shift+Enter key binding |
+| `/vim` | Enter vim mode |
+| `/login` / `/logout` | Manage Anthropic account |
+
+#### Custom Slash Commands
+
+**Creating Custom Commands:**
+
+1. **Project-specific commands** (shared with team):
+   ```bash
+   mkdir -p .claude/commands
+   ```
+   Create a Markdown file for each command. The filename becomes the command name:
+   - `optimize.md` → `/project:optimize`
+   - `fix-issue.md` → `/project:fix-issue`
+
+2. **Personal commands** (work across all projects):
+   ```bash
+   mkdir -p ~/.claude/commands
+   ```
+   Add Markdown files there. These are available in every project.
+
+The file content becomes the prompt sent to Claude.
+
+**Example command files:**
+
 ```markdown
-<!-- .claude/commands/deploy-staging.md -->
-# Deploy to Staging
+<!-- .claude/commands/fix-issue.md (simple) -->
+Fix GitHub issue #$ARGUMENTS. Read the issue, understand the problem, implement a fix, and write tests.
+```
+Usage: `/project:fix-issue 123` → replaces `$ARGUMENTS` with "123"
+
+```markdown
+<!-- .claude/commands/commit.md (common workflow) -->
+---
+description: Create a git commit with a descriptive message
+allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*)
+---
+
+Review the staged changes and create a commit with a clear, conventional commit message.
+Follow the project's commit conventions. Include scope if applicable.
+```
+
+```markdown
+<!-- .claude/commands/pr.md (common workflow) -->
+---
+description: Create a pull request
+allowed-tools: Bash(git:*), Bash(gh:*)
+---
+
+Create a pull request for the current branch:
+1. Push the branch to origin if needed
+2. Generate a clear PR title and description from the commits
+3. Create the PR using gh cli
+```
+
+```markdown
+<!-- .claude/commands/deploy-staging.md (with frontmatter) -->
+---
+allowed-tools: Bash(npm:*), Bash(git:*)
+description: Deploy to staging environment
+---
 
 Run the deployment pipeline for staging environment:
 1. Run all tests
@@ -469,6 +572,25 @@ Run the deployment pipeline for staging environment:
 ```
 
 Invoke with: `/project:deploy-staging`
+
+**Command Arguments:**
+- `$ARGUMENTS` - captures all arguments (e.g., `/fix-issue 123` → "123")
+- `$1`, `$2`, etc. - individual positional parameters
+- Use `@` prefix to reference files (e.g., `@src/file.js`)
+- Use `!` prefix to execute bash commands before the slash command runs
+
+**Frontmatter Options:**
+- `description` - Brief description (required for SlashCommand tool)
+- `allowed-tools` - List of tools the command can use
+- `model` - Specific model to use for this command
+- `argument-hint` - Hint for expected arguments
+
+**MCP Slash Commands:**
+MCP servers can expose prompts as slash commands:
+```
+/mcp__<server-name>__<prompt-name> [arguments]
+```
+Examples: `/mcp__github__list_prs`, `/mcp__jira__create_issue "Bug title" high`
 
 ### Hooks
 Hooks execute shell commands at specific points in the Claude Code lifecycle:
