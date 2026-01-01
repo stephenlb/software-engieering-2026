@@ -8,6 +8,51 @@ This guide provides practical workflows, prompting techniques, and best practice
 
 > **Note that this is a reference guide for 2026.** Rather than a tutorial about everything you need to know, it's a practical reference for working effectively with AI coding assistants in a production environment.
 
+> **The #1 prompting rule: Keep it short.** Direct beats verbose. "Fix null check in auth.ts:42" beats "I was wondering if you could take a look at the authentication code and fix any issues you might find."
+
+---
+
+## Table of Contents
+
+- [Quick Start (5-Minute Summary)](#quick-start-5-minute-summary)
+- [Best Tips and Tricks](#best-tips-and-tricks)
+- [Introduction](#introduction)
+- [TLDR Workflow](#tldr-workflow)
+- [The AI Reality Check](#the-ai-reality-check)
+- [Your Role: Director of Agents](#your-role-director-of-agents)
+- **Configuration**
+  - [CLAUDE.md Configuration](#claudemd-configuration)
+  - [Claude Code Features](#claude-code-features) (Slash Commands, Hooks, Subagents)
+- **Workflows**
+  - [Generative Coding Workflow](#generative-coding-workflow)
+  - [Prompting Guidelines](#prompting-guidelines)
+  - [Project Planning](#project-planning)
+  - [TDD with AI](#tdd-with-ai)
+  - [Debugging with AI](#debugging-with-ai)
+  - [Code Review with AI](#code-review-with-ai)
+- **AI Agents**
+  - [Agents and Tool Calling](#agents-and-tool-calling)
+  - [AI Agents and Skills](#ai-agents-and-skills)
+  - [Agent Memory](#agent-memory)
+- **Protocols & Integration**
+  - [MCP (Model Context Protocol)](#mcp-model-context-protocol)
+  - [A2A (Agent-to-Agent Protocol)](#a2a-agent-to-agent-protocol)
+  - [LSP (Language Server Protocol)](#lsp-language-server-protocol)
+- **Building AI Apps**
+  - [Token Optimization](#token-optimization)
+  - [Agent Frameworks](#agent-frameworks)
+  - [RAG Implementation](#rag-implementation-guide)
+  - [Observability & Eval](#observability)
+- **Infrastructure**
+  - [Local LLMs](#local-llms)
+  - [Context Management](#context-management)
+  - [AI-Powered DevOps](#ai-powered-devops)
+- **Production**
+  - [Security](#security)
+  - [Team Collaboration](#team-collaboration-with-ai)
+  - [Rust Migration](#rust-replacing-in-house-c-code)
+- [Resources](#resources)
+
 ---
 
 ## Technical Topics Covered:
@@ -36,13 +81,14 @@ Not just focused on AI.
 
 ## Best Tips and Tricks
 
-**Prompting**
+**Prompting: Keep It Short**
 | Tip | Why It Works |
 |-----|--------------|
-| One task per prompt | AI performs better with focused scope |
-| "Follow patterns in src/services/" | Prevents AI from inventing new abstractions |
-| "Ask clarifying questions first" | Catches misunderstandings before implementation |
-| End prompts with specific constraints | "No new dependencies", "Under 50 lines" |
+| One task per prompt | Narrow scope = better results |
+| Short, direct prompts | Less ambiguity, faster, cheaper |
+| State the outcome only | "Add logout button" not "First analyze then..." |
+| "Follow patterns in src/services/" | Prevents inventing abstractions |
+| End with constraints | "Under 50 lines", "No new deps" |
 
 **Workflow Hacks**
 | Hack | Impact |
@@ -79,10 +125,10 @@ Not just focused on AI.
 | Mistake | Fix |
 |---------|-----|
 | Shipping unreviewed AI code | Always diff review before commit |
-| Vague prompts ("make it better") | Specific outcomes ("reduce to under 200ms") |
+| Wordy prompts | Cut words ruthlessly. Direct > polite |
+| Vague prompts ("make it better") | Specific: "reduce to <200ms" |
 | Ignoring context bloat | `/clear` and start fresh regularly |
 | Premature optimization by AI | Ask "Is this necessary for launch?" |
-| Hardcoding prompts | Use external prompt management |
 
 ---
 
@@ -108,16 +154,19 @@ PROMPT → REVIEW → SECURE → REDUCE → TEST → SHIP
 | LSP | Code intelligence (go-to-definition, references) |
 | Git Worktrees | Parallel feature development |
 
-**Quick Prompting Rules:**
+**Quick Prompting Rules: Short + Direct**
 ```
-DO: "Add logout button to navbar that clears session and redirects to /login"
-DON'T: "Build the auth system"
+SHORT:  "Add logout button to navbar, redirect to /login"
+LONG:   "I need you to add a logout button to the navbar component that when clicked will clear the user session and redirect them to /login"
 
-DO: "Review this for OWASP top 10 vulnerabilities"
-DON'T: "Is this secure?"
+DIRECT: "Review for OWASP top 10"
+VAGUE:  "Is this secure?"
 
-DO: "Follow existing patterns in src/services/"
-DON'T: "Make it better"
+NARROW: "Fix the null check in getUserById"
+BROAD:  "Fix the auth system"
+
+SIMPLE: "Follow patterns in src/services/"
+WORDY:  "Please make sure to look at how we do things in src/services/ and follow those same patterns"
 ```
 
 **Example Workflow:**
@@ -147,10 +196,10 @@ cd ../myapp-feature && claude
 
 **Golden Rules:**
 1. Never ship unreviewed AI code
-2. Smaller prompts = better results
+2. Shorter prompts = better results (be direct, not verbose)
 3. AI writes it, you own it
 4. Security review is mandatory
-5. Context management prevents quality degradation
+5. `/clear` often to keep context clean
 
 **Cost Optimization:**
 - Use prompt caching (90% cost reduction on repeated prefixes)
@@ -254,7 +303,7 @@ This is a reference guide to the new software engineering practices expected of 
 
 **What's changed:**
 - AI writes the code; you architect, review, and verify
-- Prompting is a core engineering skill
+- Prompting is a core skill—short, direct prompts win
 - Context management determines productivity
 - Multi-agent workflows replace solo coding sessions
 - Security review is non-negotiable for AI-generated code
@@ -299,17 +348,17 @@ flowchart LR
 
 **Golden Rules:**
 - Never ship unreviewed code
-- Smaller prompts = better results
+- Shorter, direct prompts = better results
 - AI writes it, you own it
 
-**Example Prompts for Each Step:**
+**Example Prompts (Keep Them Short):**
 ```
-PROMPT:   "Add a logout button to the navbar that clears the session and redirects to /login"
-REVIEW:   "Show me a diff of all changes you just made"
-SECURE:   "Review this code for OWASP top 10 vulnerabilities, especially injection and auth issues"
-REDUCE:   "Refactor this to remove duplication and simplify the logic"
-TEST:     "Write unit tests for the logout function, then run them"
-REPEAT:   "The redirect isn't working on mobile Safari - investigate and fix"
+PROMPT:   "Add logout button to navbar. Clear session, redirect to /login"
+REVIEW:   "Show diff"
+SECURE:   "Review for OWASP top 10"
+REDUCE:   "Simplify, remove duplication"
+TEST:     "Write tests for logout, run them"
+REPEAT:   "Redirect broken on mobile Safari - fix"
 ```
 
 ## The AI Reality Check
@@ -370,11 +419,73 @@ The typing is solved. Now you need deeper engineering skills to guide AI effecti
 
 ## CLAUDE.md Configuration
 
-Create separate CLAUDE.md files using ALWAYS/NEVER format:
-- Root: general rules
-- Frontend: UI patterns
-- Backend: server conventions
-- Python/Data: data science workflows
+Create separate CLAUDE.md files using ALWAYS/NEVER format. These files provide persistent instructions that Claude reads at the start of every conversation.
+
+### File Locations
+| Location | Purpose | Example |
+|----------|---------|---------|
+| `~/CLAUDE.md` | Global personal preferences | Editor settings, communication style |
+| `./CLAUDE.md` | Project root rules | Tech stack, architecture decisions |
+| `./frontend/CLAUDE.md` | Frontend-specific | Component patterns, styling conventions |
+| `./backend/CLAUDE.md` | Backend-specific | API patterns, database conventions |
+| `./CLAUDE.local.md` | Personal overrides (gitignored) | Local paths, personal shortcuts |
+
+### Example CLAUDE.md Structure
+```markdown
+# Project: MyApp
+
+## Tech Stack
+- Framework: Next.js 14 with App Router
+- Database: PostgreSQL with Prisma ORM
+- Auth: NextAuth.js with JWT
+- Styling: Tailwind CSS
+
+## ALWAYS
+- Use TypeScript strict mode
+- Write tests for new functions
+- Use existing patterns in src/services/
+- Run `npm run lint` before committing
+- Use environment variables for configuration
+- Follow REST conventions for API routes
+
+## NEVER
+- Use `any` type in TypeScript
+- Commit directly to main branch
+- Store secrets in code
+- Use inline styles
+- Create new utility files without checking existing ones
+- Use default exports (prefer named exports)
+
+## Code Style
+- Prefer `const` over `let`
+- Use early returns to reduce nesting
+- Maximum function length: 50 lines
+- File naming: kebab-case for files, PascalCase for components
+
+## Commands
+- `npm run dev` - Start development server
+- `npm run test` - Run Jest tests
+- `npm run lint` - ESLint + Prettier
+- `npm run db:migrate` - Run Prisma migrations
+
+## Architecture Notes
+- Services in src/services/ handle business logic
+- API routes are thin wrappers around services
+- All database access goes through Prisma client in src/lib/db.ts
+```
+
+### CLAUDE.local.md (Personal, Gitignored)
+```markdown
+# Local Overrides
+
+## My Preferences
+- Keep responses concise
+- Show diff after edits
+
+## Local Paths
+- Test database: postgresql://localhost:5432/myapp_test
+- Local API: http://localhost:3000/api
+```
 
 Reference: https://www.anthropic.com/engineering/claude-code-best-practices
 
@@ -446,12 +557,70 @@ Hooks execute shell commands at specific points in the Claude Code lifecycle:
 | `Stop` | When Claude finishes responding |
 | `Notification` | On important events |
 
+**Environment Variables Available in Hooks:**
+| Variable | Description | Available In |
+|----------|-------------|--------------|
+| `$CLAUDE_FILE_PATH` | Path to the file being operated on | Write, Edit, Read |
+| `$CLAUDE_TOOL_NAME` | Name of the tool being called | All hooks |
+| `$CLAUDE_TOOL_INPUT` | JSON string of tool input parameters | PreToolUse, PostToolUse |
+| `$CLAUDE_TOOL_OUTPUT` | JSON string of tool output | PostToolUse only |
+| `$CLAUDE_SESSION_ID` | Current session identifier | All hooks |
+
+**Matcher Patterns:**
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      { "matcher": "Write", "command": "..." },           // Exact tool name
+      { "matcher": "Write|Edit", "command": "..." },      // Multiple tools (OR)
+      { "matcher": ".*", "command": "..." },              // All tools (regex)
+      { "matcher": "Bash\\(npm.*\\)", "command": "..." }  // Tool with arg pattern
+    ]
+  }
+}
+```
+
+**Practical Hook Examples:**
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "command": "echo '[AUDIT] Bash command at $(date)' >> ~/.claude/audit.log"
+      },
+      {
+        "matcher": "Write",
+        "command": "if echo $CLAUDE_FILE_PATH | grep -q '.env'; then echo 'BLOCKED: Cannot write to .env files' && exit 1; fi"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "command": "if echo $CLAUDE_FILE_PATH | grep -qE '\\.(ts|tsx|js|jsx)$'; then npx eslint --fix $CLAUDE_FILE_PATH 2>/dev/null || true; fi"
+      },
+      {
+        "matcher": "Write",
+        "command": "if echo $CLAUDE_FILE_PATH | grep -qE '\\.py$'; then ruff format $CLAUDE_FILE_PATH 2>/dev/null || true; fi"
+      }
+    ],
+    "Stop": [
+      {
+        "command": "osascript -e 'display notification \"Claude finished\" with title \"Claude Code\"'"
+      }
+    ]
+  }
+}
+```
+
 **Use Cases:**
-- Auto-format on file write
+- Auto-format on file write (ESLint, Prettier, Ruff, Black)
 - Run linters after code changes
-- Play sound when task completes
+- Play sound/notification when task completes
 - Log all tool usage for auditing
-- Block certain operations
+- Block writes to sensitive files (.env, credentials)
+- Auto-run tests after code changes
+- Validate JSON/YAML syntax on write
 
 ### Subagents
 Spawn independent agents to handle specific tasks without polluting main context:
@@ -575,29 +744,39 @@ git worktree add ../myapp-task-3 -b fix/login-bug
 
 ## Prompting Guidelines
 
-- **Intent**: Be clear about what you want
-- **Goal**: State expected outcome
-- **Simple**: Break complex tasks into smaller ones
-- **Context**: Provide background
-- **Best Practices**: Say it explicitly, tell AI to have strong opinions
+**The #1 Rule: Shorter is better.** Every extra word is noise.
 
-**Example Prompts by Principle:**
+**Core Principles:**
+- **Direct**: State what you want, not how to think about it
+- **Narrow**: One task, one prompt
+- **Specific**: Name the file, function, or line
+- **Constrained**: Set limits ("under 50 lines", "no new deps")
 
-| Principle | Bad Prompt | Good Prompt |
-|-----------|------------|-------------|
-| **Intent** | "Fix the bug" | "Fix the null pointer exception in UserService.getProfile() when user ID doesn't exist" |
-| **Goal** | "Make it faster" | "Reduce API response time to under 200ms by adding Redis caching to the product lookup" |
-| **Simple** | "Build the entire checkout flow" | "Create the cart summary component that displays line items, quantities, and subtotal" |
-| **Context** | "Add authentication" | "Add JWT authentication to our Express API. We're using PostgreSQL and have a users table with email/password_hash columns" |
-| **Best Practices** | "Write some tests" | "Write unit tests for the payment module. Use Jest, mock external APIs, aim for 80% coverage. Follow AAA pattern (Arrange-Act-Assert)" |
+**Short vs Long Prompts:**
 
-**Prompts That Get Better Results:**
+| Wordy (Avoid) | Direct (Better) |
+|---------------|-----------------|
+| "I need you to fix the bug that's causing issues" | "Fix null check in UserService.getProfile()" |
+| "Can you please make the API faster somehow?" | "Add Redis cache to /api/products. Target <200ms" |
+| "Build out the entire checkout flow for me" | "Create cart summary component: items, qty, subtotal" |
+| "I was wondering if you could add authentication" | "Add JWT auth to Express API. Use existing users table" |
+| "Write some tests if you have time" | "Jest tests for payment module. Mock APIs. 80% coverage" |
+
+**Effective Short Prompts:**
 ```
-"Before implementing, explain your approach and ask clarifying questions"
-"Use the existing patterns in src/services/ - don't introduce new abstractions"
-"This is a financial calculation - prioritize correctness over cleverness"
-"Keep it simple. Don't add error handling for cases that can't happen"
+"Fix the N+1 query in OrderRepository.findAll()"
+"Add rate limiting to /api/upload. 10 req/min"
+"Refactor UserService - extract validation to separate function"
+"Follow patterns in src/services/"
+"Review for SQL injection"
 ```
+
+**When More Context Helps:**
+Only add context when AI can't infer it from the codebase:
+```
+"Add password reset. We use SendGrid for email, tokens in Redis, 1hr expiry"
+```
+Even here: short sentences, just the facts.
 
 ## Project Planning
 
@@ -610,27 +789,13 @@ git worktree add ../myapp-task-3 -b fix/login-bug
 | DEVELOPMENT_PLAN.md | Phased implementation |
 | SECURITY_PLAN.md | Security considerations |
 
-**Example Prompts for Document Creation:**
+**Example Prompts (Keep Short):**
 ```
-USER_STORIES.md:
-"Generate user stories for a food delivery app. Include roles: customer, restaurant owner,
-delivery driver, admin. Format: 'As a [role], I should be able to [action] so that [benefit]'"
-
-DATA_MODELS.md:
-"Based on these user stories, design the PostgreSQL schema. Include tables, relationships,
-indexes, and constraints. Use snake_case. Add created_at/updated_at to all tables."
-
-TECH_STACK.md:
-"Recommend a tech stack for this food delivery app. Consider: real-time tracking,
-payment processing, push notifications, 10K concurrent users. Justify each choice."
-
-DEVELOPMENT_PLAN.md:
-"Create a phased development plan. Phase 1: MVP (ordering + payment). Phase 2:
-Real-time tracking. Phase 3: Analytics. List specific tasks for each phase."
-
-SECURITY_PLAN.md:
-"Identify security requirements for this app. Cover: authentication, payment data (PCI),
-location data privacy, API security, admin access controls."
+USER_STORIES:   "User stories for food delivery. Roles: customer, driver, restaurant, admin"
+DATA_MODELS:    "PostgreSQL schema from user stories. snake_case, timestamps, indexes"
+TECH_STACK:     "Tech stack for food delivery. Needs: real-time, payments, push, 10K users"
+DEV_PLAN:       "3-phase plan. MVP: ordering+payment. Phase 2: tracking. Phase 3: analytics"
+SECURITY_PLAN:  "Security reqs: auth, PCI, location privacy, API security"
 ```
 
 ### Planning Steps
@@ -642,26 +807,83 @@ location data privacy, API security, admin access controls."
 6. Create README.md
 7. Set up git repo
 
-**Example Prompts for Planning Steps:**
+**Example Planning Prompts:**
 ```
-Step 1: "I'm building a SaaS invoicing tool for freelancers. Features: create invoices,
-        track payments, send reminders, generate reports. Ask me questions to clarify scope."
-
-Step 2: "Generate comprehensive user stories for: freelancer, client (invoice recipient),
-        accountant (read-only access). Include edge cases like partial payments, disputes."
-
-Step 3: "Design the database schema for this invoicing system. I need to support multiple
-        currencies, recurring invoices, and payment tracking. Show me the ERD."
-
-Step 5: "Bootstrap a Next.js 14 app with TypeScript, Tailwind, Prisma, and NextAuth.
-        Set up the folder structure following feature-based organization."
-
-Step 6: "Create a README.md with: project overview, setup instructions, environment
-        variables needed, and contributing guidelines."
+Step 1: "SaaS invoicing for freelancers. Invoices, payments, reminders, reports. Questions?"
+Step 2: "User stories: freelancer, client, accountant. Include partial payments, disputes"
+Step 3: "DB schema for invoicing. Multi-currency, recurring, payment tracking. Show ERD"
+Step 5: "Bootstrap Next.js 14 + TS + Tailwind + Prisma + NextAuth. Feature-based folders"
+Step 6: "README: overview, setup, env vars, contributing"
 ```
 
 ### Avoid Premature Optimization
 AI optimizes too early. Watch for rate limiting, retry logic, caching before basics work. Ask: "Is this necessary for launch?" If not, add to "FUTURE IMPROVEMENTS".
+
+### Testing AI-Generated Code
+
+AI-generated code requires more testing, not less. Common issues to catch:
+
+**What AI Gets Wrong:**
+| Issue | Example | How to Catch |
+|-------|---------|--------------|
+| Hallucinated APIs | Using `fs.readFileAsync()` (doesn't exist) | TypeScript, run tests |
+| Wrong assumptions | Assuming user is always authenticated | Edge case tests |
+| Incomplete logic | Missing null checks | Unit tests with null inputs |
+| Off-by-one errors | `i <= arr.length` instead of `<` | Boundary tests |
+| Race conditions | Async operations in wrong order | Integration tests |
+
+**Testing Strategy:**
+```
+1. Type check first (catches hallucinated APIs)
+   npm run typecheck  # or tsc --noEmit
+
+2. Run existing tests (catches regressions)
+   npm test
+
+3. Add tests for new code
+   "Write tests for the function you just created"
+
+4. Smoke test manually
+   Actually try the feature in the browser/CLI
+
+5. Edge case sweep
+   "What edge cases might break this? Write tests for them."
+```
+
+**AI Testing Prompts:**
+```
+Before Implementation:
+"Write failing tests for this feature before implementing it. Cover:
+- Happy path
+- Error cases
+- Edge cases (empty input, null, very large values)"
+
+After Implementation:
+"Review the code you wrote. What could go wrong? Add tests for those cases."
+
+Mutation Testing:
+"If I changed this condition from < to <=, would any test fail?
+If not, add a test that would catch that bug."
+
+Integration Testing:
+"Write an integration test that exercises this feature end-to-end,
+including the API call, database write, and response validation."
+```
+
+**Test Coverage for AI Code:**
+```bash
+# Generate coverage report
+npm run test -- --coverage
+
+# Identify untested AI-generated code
+git diff main --name-only | xargs -I {} npm run test -- --coverage --collectCoverageFrom='{}'
+```
+
+**Common AI Testing Mistakes:**
+- Tests that just check "it doesn't throw" (too weak)
+- Mocking too much (doesn't test real behavior)
+- Tests that pass but don't assert anything meaningful
+- Copying AI-generated tests without understanding them
 
 ## Code Quality Tools
 
@@ -779,6 +1001,125 @@ Write integration tests covering: request reset, valid token, expired token, inv
 
 Scripts give AI standardized diagnostic info and reduce back-and-forth.
 
+### Example Debugging Scripts
+
+**scripts/logs.sh** - Aggregate recent logs:
+```bash
+#!/bin/bash
+# Usage: ./scripts/logs.sh [service] [minutes]
+SERVICE=${1:-"api"}
+MINUTES=${2:-5}
+
+echo "=== Last $MINUTES minutes of $SERVICE logs ==="
+echo "=== Timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ) ==="
+
+# Docker logs
+if docker ps --format '{{.Names}}' | grep -q "$SERVICE"; then
+    docker logs --since "${MINUTES}m" "$SERVICE" 2>&1 | tail -200
+# Kubernetes logs
+elif kubectl get pods -l app="$SERVICE" &>/dev/null; then
+    kubectl logs -l app="$SERVICE" --since="${MINUTES}m" --tail=200
+# Local log file
+elif [ -f "logs/$SERVICE.log" ]; then
+    tail -200 "logs/$SERVICE.log"
+else
+    echo "No logs found for $SERVICE"
+fi
+```
+
+**scripts/trace.sh** - Capture request trace:
+```bash
+#!/bin/bash
+# Usage: ./scripts/trace.sh [trace_id]
+TRACE_ID=$1
+
+if [ -z "$TRACE_ID" ]; then
+    echo "Usage: ./scripts/trace.sh <trace_id>"
+    exit 1
+fi
+
+echo "=== Trace: $TRACE_ID ==="
+
+# Query Jaeger/Tempo
+curl -s "http://localhost:16686/api/traces/$TRACE_ID" | jq '.data[0].spans[] | {service: .process.serviceName, operation: .operationName, duration: .duration, tags: .tags}' 2>/dev/null
+
+# Or query from OpenTelemetry collector
+# curl -s "http://localhost:4317/v1/traces/$TRACE_ID"
+```
+
+**scripts/profile.sh** - CPU/Memory snapshot:
+```bash
+#!/bin/bash
+# Usage: ./scripts/profile.sh [pid|service_name] [duration_seconds]
+TARGET=$1
+DURATION=${2:-30}
+
+echo "=== Profiling $TARGET for ${DURATION}s ==="
+
+# Node.js
+if pgrep -f "node.*$TARGET" > /dev/null; then
+    PID=$(pgrep -f "node.*$TARGET" | head -1)
+    echo "Node.js process: $PID"
+    node --cpu-prof --cpu-prof-interval=1000 --cpu-prof-dir=./profiles &
+    sleep $DURATION
+    kill -USR1 $PID  # Generate heap snapshot
+
+# Python
+elif pgrep -f "python.*$TARGET" > /dev/null; then
+    PID=$(pgrep -f "python.*$TARGET" | head -1)
+    echo "Python process: $PID"
+    py-spy record -o "profiles/$TARGET.svg" -p $PID -d $DURATION
+
+# Go
+elif pgrep -f "$TARGET" > /dev/null && file $(which $TARGET) | grep -q "Go"; then
+    curl -s "http://localhost:6060/debug/pprof/profile?seconds=$DURATION" > "profiles/$TARGET.pprof"
+    go tool pprof -http=:8080 "profiles/$TARGET.pprof"
+fi
+
+echo "=== Memory Usage ==="
+ps aux | grep "$TARGET" | grep -v grep | awk '{print "RSS: "$6/1024"MB, VSZ: "$5/1024"MB"}'
+```
+
+**scripts/debug.sh** - Quick diagnostic summary:
+```bash
+#!/bin/bash
+# Usage: ./scripts/debug.sh
+echo "=== System Diagnostics $(date) ==="
+
+echo -e "\n=== Docker Containers ==="
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" 2>/dev/null || echo "Docker not running"
+
+echo -e "\n=== Port Usage ==="
+lsof -i -P -n | grep LISTEN | awk '{print $1, $9}' | sort -u
+
+echo -e "\n=== Disk Space ==="
+df -h | grep -E '^/dev|Filesystem'
+
+echo -e "\n=== Memory ==="
+free -h 2>/dev/null || vm_stat | head -5
+
+echo -e "\n=== Recent Errors (last 50 lines) ==="
+grep -i "error\|exception\|fatal" logs/*.log 2>/dev/null | tail -50
+
+echo -e "\n=== Environment Check ==="
+echo "NODE_ENV: ${NODE_ENV:-not set}"
+echo "DATABASE_URL: ${DATABASE_URL:+[REDACTED]}"
+echo "API_KEY: ${API_KEY:+[REDACTED]}"
+```
+
+### Using Scripts with AI
+```
+\"I'm seeing 500 errors. Here's the output from my debug scripts:
+
+./scripts/logs.sh api 10
+[paste output]
+
+./scripts/debug.sh
+[paste output]
+
+What's the likely cause?\"
+```
+
 **Provide debug info from:** Server logs, browser console, network dev tools
 
 **Example Debugging Prompts:**
@@ -827,21 +1168,14 @@ Once we have a failing test, we can fix it properly."
 Always review your own AI-generated code before requesting human review:
 
 ```
-"Review the changes I just made. Check for:
-- Logic errors or edge cases
-- Security vulnerabilities (OWASP top 10)
-- Performance issues
-- Code style consistency
-- Missing error handling
-- Test coverage gaps"
+"Review changes for: logic errors, OWASP top 10, performance, test gaps"
 ```
 
 ### Using a Second Agent for Review
 Spawn a fresh agent to review with unbiased perspective:
 
 ```
-"Start a new session. Read the diff in PR #123 and provide a thorough code review.
-Focus on: correctness, security, maintainability, test coverage."
+"Review PR #123 diff. Check: correctness, security, maintainability"
 ```
 
 ### Automated PR Reviews
@@ -862,35 +1196,23 @@ This adds AI review comments directly to PRs.
 | **Testing** | Adequate coverage, meaningful assertions |
 | **Dependencies** | New deps justified? License compatible? |
 
-### Example Review Prompts
+### Example Review Prompts (Short)
 ```
-Focused Security Review:
-"Review this authentication code for security issues. Specifically check:
-- Password handling (hashing, storage)
-- Session management
-- CSRF protection
-- Rate limiting"
-
-Architecture Review:
-"Review this new service for architectural concerns:
-- Does it follow our existing patterns in src/services/?
-- Are dependencies properly injected?
-- Is it testable in isolation?"
-
-Performance Review:
-"Analyze this database query code for performance:
-- Are indexes being used?
-- Any N+1 query patterns?
-- Could this be batched or cached?"
+Security:    "Review auth code for: password handling, sessions, CSRF, rate limiting"
+Architecture: "Check UserService follows src/services/ patterns. Testable?"
+Performance:  "Check queries for: indexes, N+1, caching opportunities"
 ```
 
 ## Vibe Coding vs SE-Focused Generative Coding
 
 | Vibe Coding | SE-Focused |
 |-------------|------------|
-| "Build feature XYZ" | Small, focused tasks |
-| Paste error stack | Structured approach |
-| Large brush strokes | "Create function with these inputs/outputs" |
+| "Build feature XYZ" | "Add logout button. Clear session, redirect /login" |
+| Long, wordy prompts | Short, direct prompts |
+| Paste error stack | "Fix TypeError in auth.ts:42" |
+| Large brush strokes | Narrow, specific tasks |
+
+**The difference is precision.** SE-focused prompts are surgical: name the file, the function, the expected behavior. Every word earns its place.
 
 ## Agents and Tool Calling
 
@@ -1082,11 +1404,114 @@ Markdown files teaching agents specific tasks:
 - Self-improving agents write their own skills
 - Test skills on subagents for reliability
 
+### Skill File Structure
+
+Skills live in `.claude/skills/` and follow a consistent format:
+
+```markdown
+<!-- .claude/skills/DATABASE_MIGRATION.md -->
+# Skill: Database Migration
+
+## Purpose
+Safely execute database schema migrations with proper backup and rollback procedures.
+
+## When to Use
+- Adding new tables or columns
+- Modifying existing schema
+- Running data migrations
+- Deploying schema changes to production
+
+## Prerequisites
+- [ ] Database credentials available in environment
+- [ ] Backup storage configured (S3/local)
+- [ ] Migration files generated and reviewed
+
+## Steps
+
+### 1. Pre-Migration Checks
+```bash
+# Verify database connection
+npm run db:check
+
+# Check pending migrations
+npx prisma migrate status
+```
+
+### 2. Create Backup
+```bash
+# Timestamp for backup file
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+
+# PostgreSQL backup
+pg_dump $DATABASE_URL > backups/pre_migration_$TIMESTAMP.sql
+
+# Verify backup
+ls -la backups/pre_migration_$TIMESTAMP.sql
+```
+
+### 3. Execute Migration
+```bash
+# Run in transaction (Prisma does this automatically)
+npx prisma migrate deploy
+
+# Verify migration applied
+npx prisma migrate status
+```
+
+### 4. Validate
+```bash
+# Run schema validation
+npm run db:validate
+
+# Run smoke tests against new schema
+npm run test:db
+```
+
+### 5. Rollback Procedure (if needed)
+```bash
+# Restore from backup
+psql $DATABASE_URL < backups/pre_migration_$TIMESTAMP.sql
+
+# Verify rollback
+npx prisma migrate status
+```
+
+## Common Pitfalls
+- **Don't** run migrations during peak traffic
+- **Don't** skip the backup step for "small" changes
+- **Do** test migrations on staging first
+- **Do** have the rollback command ready before running
+
+## Success Criteria
+- [ ] Migration status shows "applied"
+- [ ] Application starts without errors
+- [ ] Smoke tests pass
+- [ ] No unexpected data changes
+
+## Lessons Learned
+<!-- Add entries as you encounter issues -->
+- 2024-03-15: Large table migrations need `CONCURRENTLY` flag
+- 2024-04-22: Always check for active connections before schema changes
+```
+
 ### Skill Workflow
 1. Describe the workflow
 2. Claude creates SKILL.md files
 3. Test with pressure scenarios
 4. Iterate until reliable
+
+### Example Skills Library
+
+| Skill File | Purpose |
+|------------|---------|
+| `DEPLOYMENT.md` | Deploy to staging/production with checks |
+| `DATABASE_MIGRATION.md` | Safe schema changes |
+| `CODE_REVIEW.md` | Systematic PR review checklist |
+| `INCIDENT_RESPONSE.md` | On-call runbook |
+| `FEATURE_FLAG.md` | Adding/removing feature flags |
+| `API_ENDPOINT.md` | Creating new REST endpoints |
+| `COMPONENT_CREATION.md` | New React/Vue component |
+| `TEST_WRITING.md` | TDD workflow for new features |
 
 **Example Prompts for Skills:**
 ```
@@ -1147,6 +1572,194 @@ Agent memory solves a critical limitation: AI agents lose all context when a con
 - `CLAUDE.md` / `CLAUDE.local.md` for project-specific memory
 - `.claude/` directory for conversation artifacts
 - External vector stores for cross-project knowledge
+
+### Implementing Agent Memory
+
+**Option 1: File-Based Memory (Simple)**
+
+Store memories in structured markdown files that Claude reads on startup:
+
+```markdown
+<!-- .claude/memory/ARCHITECTURE.md -->
+# Architecture Decisions
+
+## Database
+- Using PostgreSQL 15 with PGVector extension
+- Read replicas in us-east-1 and eu-west-1
+- Connection pooling via PgBouncer (max 100 connections)
+
+## API Design
+- REST for CRUD, GraphQL for complex queries
+- Rate limiting: 100 req/min for free tier, 1000 for paid
+- All endpoints require JWT auth except /health and /docs
+
+## Lessons Learned (2024-2025)
+- Don't use soft deletes for user data (GDPR complications)
+- Redis cluster mode caused issues; switched to single-node with replicas
+- Avoid N+1 queries in GraphQL resolvers; use DataLoader
+```
+
+```markdown
+<!-- .claude/memory/CONVENTIONS.md -->
+# Coding Conventions
+
+## Naming
+- Files: kebab-case (user-service.ts)
+- Components: PascalCase (UserProfile.tsx)
+- Functions: camelCase (getUserById)
+- Constants: SCREAMING_SNAKE (MAX_RETRIES)
+
+## Patterns We Use
+- Repository pattern for data access
+- Factory pattern for test fixtures
+- Dependency injection via constructor
+
+## Anti-Patterns to Avoid
+- God classes (split if >300 lines)
+- Circular dependencies (use dependency inversion)
+- Raw SQL in controllers (use repository layer)
+```
+
+**Option 2: Vector-Indexed Memory (Scalable)**
+
+```python
+# scripts/memory_index.py
+import sqlite3
+import json
+from pathlib import Path
+import anthropic
+
+def create_memory_db():
+    """Create SQLite database with vector search capability."""
+    conn = sqlite3.connect('.claude/memory.db')
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS memories (
+            id INTEGER PRIMARY KEY,
+            content TEXT NOT NULL,
+            embedding BLOB,
+            category TEXT,
+            source TEXT,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS conversations (
+            id INTEGER PRIMARY KEY,
+            summary TEXT,
+            key_decisions TEXT,
+            files_modified TEXT,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    return conn
+
+def summarize_conversation(transcript: str) -> dict:
+    """Use Haiku to extract key facts from a conversation."""
+    client = anthropic.Anthropic()
+
+    response = client.messages.create(
+        model="claude-3-haiku-20240307",
+        max_tokens=500,
+        messages=[{
+            "role": "user",
+            "content": f"""Summarize this conversation. Extract:
+1. Key decisions made
+2. Files modified
+3. Important context for future sessions
+
+Conversation:
+{transcript}
+
+Output JSON: {{"summary": "...", "decisions": [...], "files": [...], "context": "..."}}"""
+        }]
+    )
+
+    return json.loads(response.content[0].text)
+
+def search_memory(query: str, conn, limit: int = 5) -> list:
+    """Search memories by keyword (upgrade to vector search for production)."""
+    cur = conn.execute("""
+        SELECT content, category, source
+        FROM memories
+        WHERE content LIKE ?
+        ORDER BY timestamp DESC
+        LIMIT ?
+    """, (f"%{query}%", limit))
+    return cur.fetchall()
+```
+
+**Option 3: Memory via Subagent (Context-Efficient)**
+
+```
+"Before implementing, use a subagent to search our memory files in .claude/memory/
+for any previous decisions about authentication. Summarize findings in 3 bullets
+without loading full file contents into this conversation."
+```
+
+**Automatic Memory Capture Hook:**
+
+```json
+// .claude/settings.json
+{
+  "hooks": {
+    "Stop": [
+      {
+        "command": "python scripts/capture_memory.py $CLAUDE_SESSION_ID"
+      }
+    ]
+  }
+}
+```
+
+```python
+# scripts/capture_memory.py
+import sys
+import json
+from pathlib import Path
+from datetime import datetime
+
+def capture_session(session_id: str):
+    """Extract key facts from completed session."""
+    session_file = Path(f".claude/sessions/{session_id}.json")
+
+    if not session_file.exists():
+        return
+
+    session = json.loads(session_file.read_text())
+
+    # Extract files that were modified
+    modified_files = [
+        msg.get("file_path")
+        for msg in session.get("messages", [])
+        if msg.get("tool") in ["Write", "Edit"]
+    ]
+
+    # Append to daily memory log
+    memory_file = Path(f".claude/memory/sessions/{datetime.now():%Y-%m-%d}.md")
+    memory_file.parent.mkdir(parents=True, exist_ok=True)
+
+    with open(memory_file, "a") as f:
+        f.write(f"\n## Session {session_id[:8]} - {datetime.now():%H:%M}\n")
+        f.write(f"Files modified: {', '.join(set(modified_files))}\n")
+
+if __name__ == "__main__":
+    capture_session(sys.argv[1])
+```
+
+**Memory Prompts:**
+```
+Loading Memory:
+"Read .claude/memory/ARCHITECTURE.md and .claude/memory/CONVENTIONS.md before
+we start. Acknowledge the key patterns and constraints."
+
+Saving Memory:
+"We made an important decision about caching. Add this to .claude/memory/ARCHITECTURE.md
+under a new 'Caching Strategy' section."
+
+Searching Memory:
+"Search .claude/memory/ for any previous discussions about rate limiting.
+What did we decide?"
+```
 
 ### Available Skills
 
@@ -1222,8 +1835,177 @@ flowchart TD
 3. Images: S3/R2 + multimodal models
 4. Embeddings: OpenAI, Google, or Voyage
 
+### RAG Implementation Guide
+
+**Step 1: Choose Your Stack**
+| Component | Options | Recommendation |
+|-----------|---------|----------------|
+| Vector DB | PGVector, Pinecone, Weaviate, Qdrant, Chroma | PGVector (if already using Postgres), Pinecone (managed) |
+| Embeddings | OpenAI, Voyage, Cohere, local (nomic-embed) | Voyage (best quality), OpenAI (easiest) |
+| Chunking | Docling, LangChain, LlamaIndex | Docling (handles PDFs, tables, images) |
+| Framework | LangChain, LlamaIndex, raw API | LangChain (most examples), raw (most control) |
+
+**Step 2: Set Up Vector Database**
+```bash
+# PGVector with Docker
+docker run -d --name pgvector \
+  -e POSTGRES_PASSWORD=password \
+  -p 5432:5432 \
+  pgvector/pgvector:pg16
+
+# Create extension and table
+psql -h localhost -U postgres -c "CREATE EXTENSION vector;"
+```
+
+```sql
+-- Schema for document chunks
+CREATE TABLE document_chunks (
+    id SERIAL PRIMARY KEY,
+    content TEXT NOT NULL,
+    embedding vector(1536),  -- OpenAI dimension
+    metadata JSONB,
+    source_file TEXT,
+    chunk_index INT,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX ON document_chunks
+USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+```
+
+**Step 3: Chunk Documents**
+```python
+# Using Docling for robust document processing
+from docling.document_converter import DocumentConverter
+
+converter = DocumentConverter()
+
+def chunk_document(file_path: str, chunk_size: int = 500) -> list[dict]:
+    """Convert document to chunks with metadata."""
+    result = converter.convert(file_path)
+
+    chunks = []
+    current_chunk = ""
+
+    for item in result.document.iterate_items():
+        text = item.text if hasattr(item, 'text') else str(item)
+
+        if len(current_chunk) + len(text) > chunk_size:
+            if current_chunk:
+                chunks.append({
+                    "content": current_chunk.strip(),
+                    "source": file_path,
+                    "type": item.__class__.__name__
+                })
+            current_chunk = text
+        else:
+            current_chunk += " " + text
+
+    if current_chunk:
+        chunks.append({"content": current_chunk.strip(), "source": file_path})
+
+    return chunks
+```
+
+**Step 4: Generate and Store Embeddings**
+```python
+import openai
+import psycopg2
+
+def embed_and_store(chunks: list[dict], conn):
+    """Generate embeddings and store in PGVector."""
+    client = openai.OpenAI()
+
+    for i, chunk in enumerate(chunks):
+        # Generate embedding
+        response = client.embeddings.create(
+            model="text-embedding-3-small",
+            input=chunk["content"]
+        )
+        embedding = response.data[0].embedding
+
+        # Store in database
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO document_chunks (content, embedding, metadata, source_file, chunk_index)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (
+            chunk["content"],
+            embedding,
+            json.dumps(chunk.get("metadata", {})),
+            chunk["source"],
+            i
+        ))
+
+    conn.commit()
+```
+
+**Step 5: Retrieve and Generate**
+```python
+def rag_query(question: str, conn, top_k: int = 5) -> str:
+    """Retrieve relevant chunks and generate answer."""
+    client = openai.OpenAI()
+
+    # Embed the question
+    q_embedding = client.embeddings.create(
+        model="text-embedding-3-small",
+        input=question
+    ).data[0].embedding
+
+    # Retrieve similar chunks
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT content, source_file, 1 - (embedding <=> %s::vector) as similarity
+        FROM document_chunks
+        ORDER BY embedding <=> %s::vector
+        LIMIT %s
+    """, (q_embedding, q_embedding, top_k))
+
+    chunks = cur.fetchall()
+
+    # Build context
+    context = "\n\n".join([
+        f"[Source: {row[1]}]\n{row[0]}"
+        for row in chunks
+    ])
+
+    # Generate answer
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "system", "content": f"Answer based on this context:\n\n{context}"},
+            {"role": "user", "content": question}
+        ]
+    )
+
+    return response.choices[0].message.content
+```
+
+**Step 6: Optimize**
+| Technique | When to Use | Implementation |
+|-----------|-------------|----------------|
+| Hybrid search | Better recall | Combine vector + keyword (BM25) |
+| Reranking | Better precision | Use Cohere rerank after retrieval |
+| Query expansion | Ambiguous queries | LLM rewrites query before search |
+| Chunk overlap | Context continuity | 10-20% overlap between chunks |
+| Metadata filtering | Large corpora | Filter by date, source, type before vector search |
+
 ### Embeddings
 Semantic retrieval vs keyword matching. Maps user terms to expected terminology. Reduces tokens by retrieving less, more relevant text.
+
+**Embedding Model Comparison:**
+| Model | Dimensions | Quality | Speed | Cost |
+|-------|------------|---------|-------|------|
+| OpenAI text-embedding-3-small | 1536 | Good | Fast | $0.02/1M tokens |
+| OpenAI text-embedding-3-large | 3072 | Better | Medium | $0.13/1M tokens |
+| Voyage voyage-3 | 1024 | Best | Medium | $0.06/1M tokens |
+| Cohere embed-v3 | 1024 | Good | Fast | $0.10/1M tokens |
+| nomic-embed-text (local) | 768 | Good | Varies | Free |
+
+**When to Use Which:**
+- **text-embedding-3-small**: Default choice, good balance
+- **Voyage**: When retrieval quality is critical (legal, medical)
+- **nomic-embed-text**: Privacy requirements, high volume, cost-sensitive
 
 ## New Skills for 2026
 
@@ -1304,17 +2086,119 @@ claude mcp add <name> <command>
 
 ### Recommended MCPs
 ```bash
-# Context7 - Up-to-date docs
+# Context7 - Up-to-date docs for any library
 claude mcp add --transport http context7 https://mcp.context7.com/mcp --header "CONTEXT7_API_KEY: YOUR_KEY"
 
-# Figma Dev Mode
+# Figma Dev Mode - Design to code
 claude mcp add --transport http figma-desktop http://127.0.0.1:3845/mcp
 
 # Shopify Dev
 claude mcp add shopify-dev-mcp npx @shopify/dev-mcp@latest
+
+# PostgreSQL - Direct database access
+claude mcp add postgres npx @anthropics/mcp-server-postgres postgresql://user:pass@localhost:5432/mydb
+
+# Filesystem - Broader file access
+claude mcp add filesystem npx @anthropics/mcp-server-filesystem /path/to/allowed/directory
+
+# Memory - Persistent key-value storage
+claude mcp add memory npx @anthropics/mcp-server-memory
+
+# Brave Search - Web search capability
+claude mcp add brave-search npx @anthropics/mcp-server-brave-search
 ```
 
 Also: Sosumi (Apple/iOS docs) - https://sosumi.ai/
+
+### MCP Troubleshooting
+
+**Common Issues:**
+
+| Problem | Solution |
+|---------|----------|
+| "Server not found" | Check `claude mcp list` shows the server |
+| "Connection refused" | Verify the server is running (`npx` servers start on demand) |
+| "Permission denied" | Check API keys and credentials are correct |
+| "Timeout" | Increase timeout with `--timeout 30000` |
+
+**Debug MCP Connections:**
+```bash
+# List all configured MCPs
+claude mcp list
+
+# Check MCP server status
+claude mcp status <name>
+
+# Remove and re-add problematic MCP
+claude mcp remove <name>
+claude mcp add <name> <command>
+
+# View MCP logs (if available)
+tail -f ~/.claude/logs/mcp-*.log
+```
+
+**Environment Variables for MCPs:**
+```bash
+# Set credentials before adding MCP
+export GITHUB_TOKEN="ghp_xxxx"
+export DATABASE_URL="postgresql://..."
+export OPENAI_API_KEY="sk-..."
+
+# Then add MCP (it picks up env vars)
+claude mcp add github npx @anthropics/mcp-server-github
+```
+
+### Writing Custom MCPs
+
+For project-specific integrations, create a custom MCP server:
+
+```typescript
+// mcp-server/index.ts
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+
+const server = new Server({
+  name: "my-custom-mcp",
+  version: "1.0.0",
+}, {
+  capabilities: {
+    tools: {},
+  }
+});
+
+// Define a custom tool
+server.setRequestHandler("tools/list", async () => ({
+  tools: [{
+    name: "query_internal_api",
+    description: "Query our internal REST API",
+    inputSchema: {
+      type: "object",
+      properties: {
+        endpoint: { type: "string", description: "API endpoint path" },
+        method: { type: "string", enum: ["GET", "POST"] }
+      },
+      required: ["endpoint"]
+    }
+  }]
+}));
+
+server.setRequestHandler("tools/call", async (request) => {
+  if (request.params.name === "query_internal_api") {
+    const { endpoint, method = "GET" } = request.params.arguments;
+    const response = await fetch(`https://api.internal.com${endpoint}`, { method });
+    return { content: [{ type: "text", text: await response.text() }] };
+  }
+});
+
+// Start server
+const transport = new StdioServerTransport();
+await server.connect(transport);
+```
+
+```bash
+# Add your custom MCP
+claude mcp add my-api node ./mcp-server/index.js
+```
 
 ## A2A (Agent-to-Agent Protocol)
 
@@ -1461,6 +2345,93 @@ DeepSeek R1/V3, Kimi K2 (1M+ tokens), MiniMax, Llama 4, Qwen 3, Mistral Large
 | Offline | Frontier capabilities |
 | Cost optimization | Complex reasoning |
 
+### Setting Up Ollama
+
+```bash
+# Install
+brew install ollama  # macOS
+curl -fsSL https://ollama.ai/install.sh | sh  # Linux
+
+# Start the server
+ollama serve
+
+# Pull models
+ollama pull llama3.2           # 3B - Fast, good for simple tasks
+ollama pull llama3.2:70b       # 70B - Better quality, needs GPU
+ollama pull deepseek-coder-v2  # Excellent for code
+ollama pull qwen2.5-coder      # Good code model, multilingual
+ollama pull nomic-embed-text   # Embeddings for RAG
+
+# Run interactively
+ollama run llama3.2
+
+# API usage (OpenAI-compatible)
+curl http://localhost:11434/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "llama3.2",
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'
+```
+
+**Using with Python (OpenAI SDK compatible):**
+```python
+from openai import OpenAI
+
+# Point to local Ollama
+client = OpenAI(
+    base_url="http://localhost:11434/v1",
+    api_key="not-needed"  # Ollama doesn't require auth
+)
+
+response = client.chat.completions.create(
+    model="llama3.2",
+    messages=[{"role": "user", "content": "Explain recursion"}]
+)
+print(response.choices[0].message.content)
+```
+
+### Hardware Requirements
+
+| Model Size | RAM Required | GPU VRAM | Performance |
+|------------|--------------|----------|-------------|
+| 3B | 4GB | 4GB | Fast, good for simple tasks |
+| 7B | 8GB | 8GB | Balanced quality/speed |
+| 13B | 16GB | 16GB | Good quality |
+| 34B | 32GB | 24GB | High quality |
+| 70B | 64GB | 48GB+ | Near-frontier quality |
+
+**Apple Silicon Notes:**
+- M1/M2/M3 Pro: Up to 13B comfortably
+- M1/M2/M3 Max: Up to 34B
+- M1/M2/M3 Ultra: 70B models possible
+- Uses unified memory (RAM = VRAM)
+
+### Model Selection Guide
+
+| Use Case | Recommended Model | Why |
+|----------|-------------------|-----|
+| Code completion | deepseek-coder-v2, qwen2.5-coder | Trained on code |
+| General chat | llama3.2, mistral | Good balance |
+| Long context | kimi-k2, llama3.2:70b | 128K+ context |
+| Embeddings | nomic-embed-text | Fast, good quality |
+| Reasoning | deepseek-r1 | Chain-of-thought |
+
+### Using Local LLMs with Claude Code
+
+Create a custom MCP server for local model access, or use OpenRouter to route between local and cloud:
+
+```python
+# Local model for quick tasks, cloud for complex
+def smart_route(prompt: str, complexity: str = "auto"):
+    if complexity == "simple" or len(prompt) < 100:
+        # Use local Ollama
+        return ollama_client.chat(model="llama3.2", messages=[...])
+    else:
+        # Use Claude for complex tasks
+        return anthropic_client.messages.create(model="claude-sonnet-4-20250514", ...)
+```
+
 ## Context Management
 
 ![Context Management Best Practices](images/09-context-management-best-practices.png)
@@ -1472,32 +2443,20 @@ Quality drops after compaction. Keep sessions clean and focused.
 - Run `/clear` often to restart with a new task for best results
 
 ### Best Practices
+- Keep prompts short and direct—verbosity adds noise
 - Different agents cross-check plans
 - Research in one session, execute in fresh session
 - Markdown > plain text for LLMs
-- Consider TOON format for structured AI communication
 
-**TOON Format:**
-A structured text format optimized for LLM communication:
+**TOON Format (Optional):**
+Structured format for complex tasks only—simple prompts don't need structure:
 ```
-[TASK]
-Implement user authentication
-
-[CONTEXT]
-- Framework: Next.js 14
-- Database: PostgreSQL
-- Auth: JWT with refresh tokens
-
-[CONSTRAINTS]
-- Must use existing User model
-- Follow patterns in src/auth/
-
-[OUTPUT]
-- Modified files with explanations
-- Test coverage for new code
+[TASK] JWT auth for Express API
+[CONTEXT] PostgreSQL, existing users table
+[CONSTRAINTS] Use src/auth/ patterns, no new deps
 ```
 
-Benefits: Clear sections reduce ambiguity, consistent structure improves response quality.
+Benefits: Clear sections reduce ambiguity. Only use for multi-part tasks.
 
 Reference: https://github.com/toon-format/toon
 
@@ -1551,9 +2510,11 @@ console.log(response.usage.cache_read_input_tokens);      // Subsequent calls
 | Do | Don't |
 |----|-------|
 | Put static content first (system prompt, examples) | Put dynamic content at start |
-| Use long, detailed system prompts | Change system prompt frequently |
+| Keep system prompt stable (enables caching) | Change system prompt frequently |
 | Batch similar requests | Interleave different prompt types |
 | Cache RAG context that doesn't change | Include timestamps in cached content |
+
+> **Note:** System prompts (app config, rules) can be long for caching benefits. User prompts should still be short and direct.
 
 **Cost Impact:**
 - Cache writes: 25% more than base input
@@ -1669,7 +2630,7 @@ pip install anthropic-agent-sdk
 ```
 
 ### Tools for AI
-Plan thoroughly. Follow OpenAI/Anthropic specs or use LangChain tools.
+Follow OpenAI/Anthropic tool specs or use LangChain. Keep tool descriptions concise.
 
 ### Prompt Management
 Don't hardcode. Use dependency injection or hosted tools (Vellum, Langsmith). Iterate constantly.
@@ -1828,13 +2789,127 @@ npm install n8n -g && n8n start
 
 ### Code
 - Run `/security-review` in Claude Code
-- SEMGREP in GitHub Actions: https://semgrep.dev/docs/getting-started/quickstart-managed-scans
+- SEMGREP in GitHub Actions
 - Never commit secrets; use `.env` + `.gitignore`
 
+### Setting Up SEMGREP
+
+**Local Installation:**
+```bash
+# Install
+pip install semgrep
+# or
+brew install semgrep
+
+# Run against your code
+semgrep scan --config auto
+
+# Run specific rulesets
+semgrep scan --config p/security-audit
+semgrep scan --config p/owasp-top-ten
+semgrep scan --config p/secrets
+```
+
+**GitHub Actions Integration:**
+```yaml
+# .github/workflows/semgrep.yml
+name: Semgrep Security Scan
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  semgrep:
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Semgrep
+        run: semgrep scan --config auto --error --json > semgrep-results.json
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: semgrep-results
+          path: semgrep-results.json
+
+      # Optional: Fail on high severity findings
+      - name: Check for critical issues
+        run: |
+          if grep -q '"severity": "ERROR"' semgrep-results.json; then
+            echo "Critical security issues found!"
+            exit 1
+          fi
+```
+
+**Custom Rules for Your Codebase:**
+```yaml
+# .semgrep/custom-rules.yml
+rules:
+  - id: no-hardcoded-api-keys
+    patterns:
+      - pattern-regex: (api[_-]?key|apikey)\s*[:=]\s*['"][a-zA-Z0-9]{20,}['"]
+    message: "Hardcoded API key detected"
+    severity: ERROR
+    languages: [javascript, typescript, python]
+
+  - id: no-eval-user-input
+    patterns:
+      - pattern: eval($USER_INPUT)
+    message: "Never eval user input - potential code injection"
+    severity: ERROR
+    languages: [javascript, python]
+
+  - id: sql-injection-risk
+    patterns:
+      - pattern: |
+          $QUERY = f"... {$USER_INPUT} ..."
+          $DB.execute($QUERY)
+    message: "Potential SQL injection - use parameterized queries"
+    severity: ERROR
+    languages: [python]
+```
+
+**Pre-commit Hook:**
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/semgrep/semgrep
+    rev: v1.50.0
+    hooks:
+      - id: semgrep
+        args: ['--config', 'auto', '--error']
+```
+
+### Secret Scanning
+
+**Prevent secrets from being committed:**
+```bash
+# Install gitleaks
+brew install gitleaks
+
+# Scan for secrets
+gitleaks detect --source . --verbose
+
+# Pre-commit hook
+gitleaks protect --staged
+```
+
+**GitHub Secret Scanning:**
+Enable in repository settings: Settings → Security → Secret scanning
+
 ### User Data
-- Lock down S3 buckets
+- Lock down S3 buckets (block public access by default)
 - Strip EXIF from uploaded images
 - Vault/encrypt sensitive data
+- Implement data retention policies
 
 ### AI Security
 - PromptFoo for security testing
@@ -2035,6 +3110,99 @@ Performance Comparison:
 `brew install gh` - Automates GitHub work. Claude Code integrates for PRs, reviews.
 
 Run `/install-github-app` for Claude GitHub action (auto-review PRs).
+
+## Team Collaboration with AI
+
+### Multi-Developer AI Workflows
+
+When multiple engineers use AI assistants on the same codebase:
+
+**Shared Configuration:**
+```
+project/
+├── CLAUDE.md              # Shared team conventions (committed)
+├── .claude/
+│   ├── settings.json      # Shared hooks and settings (committed)
+│   ├── skills/            # Team skill library (committed)
+│   └── memory/            # Shared architectural knowledge (committed)
+├── CLAUDE.local.md        # Personal preferences (gitignored)
+```
+
+**Team CLAUDE.md Best Practices:**
+- Document architectural decisions so all agents give consistent advice
+- Include "NEVER" rules for dangerous operations
+- List approved libraries and patterns
+- Reference existing code as examples
+
+**Preventing Conflicts:**
+
+| Strategy | How |
+|----------|-----|
+| Worktrees per developer | Each dev works in isolated directory |
+| Feature branches | AI changes go to branches, not main |
+| Lock files | Use package-lock.json, yarn.lock |
+| PR reviews | Human reviews all AI-generated code |
+
+### Code Review for AI-Generated PRs
+
+**Team Review Checklist:**
+```markdown
+## AI Code Review Checklist
+
+### Correctness
+- [ ] Logic matches the ticket/requirements
+- [ ] Edge cases handled appropriately
+- [ ] No obvious bugs or typos
+
+### Security
+- [ ] No hardcoded secrets
+- [ ] Input validation present
+- [ ] OWASP top 10 considered
+
+### Style
+- [ ] Follows existing patterns in codebase
+- [ ] Naming conventions match team standards
+- [ ] No unnecessary abstractions added
+
+### Tests
+- [ ] Tests cover the changes
+- [ ] Tests actually test behavior (not just coverage)
+- [ ] No flaky tests introduced
+
+### AI-Specific Checks
+- [ ] No hallucinated imports/dependencies
+- [ ] No invented APIs that don't exist
+- [ ] Comments are accurate (AI sometimes writes wrong comments)
+```
+
+**Review Prompts for Team:**
+```
+"Review this PR from another developer's AI session. Focus on:
+- Does it follow our patterns in src/services/?
+- Any security issues we should block on?
+- Is the complexity justified?"
+```
+
+### Onboarding New Team Members
+
+Help new developers leverage existing AI context:
+
+```
+"Read CLAUDE.md and .claude/memory/ARCHITECTURE.md. Summarize:
+1. The main tech stack we use
+2. Key architectural patterns
+3. Things I should avoid doing
+4. How to run the development environment"
+```
+
+### Handling AI Disagreements
+
+When AI gives different answers to different team members:
+
+1. **Document decisions** in `.claude/memory/` so all agents learn
+2. **Update CLAUDE.md** with explicit guidance
+3. **Use skills** for standardized workflows
+4. **Cross-check** important decisions with fresh agent session
 
 ## Development Principles
 
