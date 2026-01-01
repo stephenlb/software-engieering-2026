@@ -501,3 +501,141 @@ AI doesn't always check existing patterns before coding:
 ```
 Please look at the workflow code to identify violations of best practices like DRY and SRP
 ```
+# Claude Code Superpowers Skills
+
+A comprehensive guide to the superpowers skills available in Claude Code for AI-powered software development.
+
+## What are Superpowers?
+
+Superpowers are specialized workflows and best practices built into Claude Code that help structure complex development tasks. They provide rigorous, battle-tested approaches to common software engineering challenges.
+
+## Available Skills
+
+### Getting Started
+
+#### `superpowers:using-superpowers`
+**When to use:** Starting any conversation
+
+Establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions. This is the foundational skill that teaches Claude Code how to properly leverage all other skills.
+
+---
+
+### Planning & Design
+
+#### `superpowers:brainstorming`
+**When to use:** Before any creative work - creating features, building components, adding functionality, or modifying behavior
+
+Explores user intent, requirements and design before implementation. **MUST use this before creative work.**
+
+#### `superpowers:writing-plans`
+**When to use:** When you have a spec or requirements for a multi-step task, before touching code
+
+Creates detailed implementation plans that break down complex tasks into manageable steps with clear checkpoints.
+
+---
+
+### Development Workflows
+
+#### `superpowers:test-driven-development`
+**When to use:** When implementing any feature or bugfix, before writing implementation code
+
+Ensures tests are written first, driving the design and implementation of reliable, well-tested code.
+
+#### `superpowers:using-git-worktrees`
+**When to use:** Starting feature work that needs isolation from current workspace or before executing implementation plans
+
+Creates isolated git worktrees with smart directory selection and safety verification, allowing you to work on multiple features simultaneously without conflicts.
+
+#### `superpowers:subagent-driven-development`
+**When to use:** Executing implementation plans with independent tasks in the current session
+
+Coordinates multiple parallel development streams for efficient task completion.
+
+---
+
+### Debugging & Problem Solving
+
+#### `superpowers:systematic-debugging`
+**When to use:** When encountering any bug, test failure, or unexpected behavior, before proposing fixes
+
+Provides a structured approach to identifying root causes and implementing proper fixes rather than quick patches.
+
+---
+
+### Execution & Completion
+
+#### `superpowers:executing-plans`
+**When to use:** When you have a written implementation plan to execute in a separate session with review checkpoints
+
+Guides the execution of implementation plans with structured review points to ensure quality.
+
+#### `superpowers:verification-before-completion`
+**When to use:** When about to claim work is complete, fixed, or passing, before committing or creating PRs
+
+Requires running verification commands and confirming output before making any success claims - evidence before assertions always.
+
+#### `superpowers:finishing-a-development-branch`
+**When to use:** Implementation is complete, all tests pass, and you need to decide how to integrate the work
+
+Guides completion of development work by presenting structured options for merge, PR, or cleanup.
+
+---
+
+### Collaboration & Review
+
+#### `superpowers:requesting-code-review`
+**When to use:** Completing tasks, implementing major features, or before merging to verify work meets requirements
+
+Structures code review requests to ensure thorough evaluation of changes.
+
+#### `superpowers:receiving-code-review`
+**When to use:** Receiving code review feedback, before implementing suggestions
+
+Requires technical rigor and verification, not performative agreement or blind implementation - especially if feedback seems unclear or technically questionable.
+
+---
+
+### Parallel Workflows
+
+#### `superpowers:dispatching-parallel-agents`
+**When to use:** Facing 2+ independent tasks that can be worked on without shared state or sequential dependencies
+
+Maximizes efficiency by running independent tasks concurrently.
+
+---
+
+### Meta: Building Skills
+
+#### `superpowers:writing-skills`
+**When to use:** Creating new skills, editing existing skills, or verifying skills work before deployment
+
+A meta-skill for extending the superpowers system itself with new workflows and best practices.
+
+---
+
+## Key Principles
+
+### The 1% Rule
+If you think there is even a 1% chance a skill might apply to what you are doing, you **MUST** invoke the skill. This is not negotiable.
+
+### Skill Priority
+When multiple skills could apply:
+1. **Process skills first** (brainstorming, debugging) - these determine HOW to approach the task
+2. **Implementation skills second** - these guide execution
+
+### Skill Types
+- **Rigid skills** (TDD, debugging): Follow exactly. Don't adapt away discipline.
+- **Flexible skills** (patterns): Adapt principles to context.
+
+---
+
+## Common Anti-Patterns to Avoid
+
+| ❌ Rationalization | ✅ Reality |
+|-------------------|-----------|
+| "This is just a simple question" | Questions are tasks. Check for skills. |
+| "I need more context first" | Skill check comes BEFORE clarifying questions. |
+| "Let me explore the codebase first" | Skills tell you HOW to explore. Check first. |
+| "I can check git/files quickly" | Files lack conversation context. Check for skills. |
+| "This doesn't need a formal skill" | If a skill exists, use it. |
+| "The skill is overkill" | Simple things become complex. Use it. |
