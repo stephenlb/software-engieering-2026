@@ -6,6 +6,8 @@ In 2026, software engineering has fundamentally changed.
 AI agents write the code; you direct, review, and ship.
 This guide provides practical workflows, prompting techniques, and best practices to thrive as a Director of Agents.
 
+> **Note that this is a reference guide for 2026.** Rather than a tutorial about everything you need to know, it's a practical reference for working effectively with AI coding assistants in a production environment.
+
 ---
 
 ## Technical Topics Covered:
@@ -31,6 +33,58 @@ Not just focused on AI.
 | **Optimization** | Prompt Caching, Model Routing, OpenRouter |
 | **Languages** | Rust, TypeScript, Python |
 | **Prompt Formats** | TOON, Markdown, CLAUDE.md |
+
+## Best Tips and Tricks
+
+**Prompting**
+| Tip | Why It Works |
+|-----|--------------|
+| One task per prompt | AI performs better with focused scope |
+| "Follow patterns in src/services/" | Prevents AI from inventing new abstractions |
+| "Ask clarifying questions first" | Catches misunderstandings before implementation |
+| End prompts with specific constraints | "No new dependencies", "Under 50 lines" |
+
+**Workflow Hacks**
+| Hack | Impact |
+|------|--------|
+| Git worktrees per feature | Parallel Claude sessions, no branch switching |
+| Research → `/clear` → Implement | Fresh context = higher quality output |
+| Subagents for searching | Keeps main context clean and focused |
+| Background agents for tests | Continue working while tests run |
+
+**Cost Savers**
+| Technique | Savings |
+|-----------|---------|
+| Prompt caching (long system prompts) | Up to 90% on repeated prefixes |
+| Haiku for quick tasks | 10x cheaper than Opus |
+| Subagents for exploration | Avoids polluting expensive main context |
+
+**Quality Gates**
+| Gate | Command/Prompt |
+|------|----------------|
+| Security review | `/security-review` or "Review for OWASP top 10" |
+| Self-review before PR | "Review changes for logic errors and edge cases" |
+| Second opinion | New agent session reviews your diff |
+| Test coverage | "Identify untested code paths" |
+
+**Productivity Multipliers**
+| Multiplier | How |
+|------------|-----|
+| Let AI write prompts | Point Claude at a spec, ask it to generate execution prompts |
+| Automate everything | Docs, diagrams, commit messages, PR descriptions |
+| Skills for repeated workflows | Teach agents once, reuse forever |
+| The 1% Rule | If even 1% chance a skill applies, invoke it |
+
+**Common Mistakes to Avoid**
+| Mistake | Fix |
+|---------|-----|
+| Shipping unreviewed AI code | Always diff review before commit |
+| Vague prompts ("make it better") | Specific outcomes ("reduce to under 200ms") |
+| Ignoring context bloat | `/clear` and start fresh regularly |
+| Premature optimization by AI | Ask "Is this necessary for launch?" |
+| Hardcoding prompts | Use external prompt management |
+
+---
 
 ## Quick Start (5-Minute Summary)
 
