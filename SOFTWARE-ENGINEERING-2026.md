@@ -6,7 +6,7 @@ Are you already behind? Probably! Let's fix that.
 
 In 2026, software engineering has fundamentally changed.
 AI agents write the code; you direct, review, and ship.
-This guide provides practical workflows, prompting techniques, and best practices to thrive as a Director of Agents.
+This guide provides practical workflows, prompting techniques, and best practices to thrive with the new Director of Agents engineering skillset for 2026.
 
 **The #1 prompting rule: Keep it short.**
 Direct beats verbose. "Fix null check in auth.ts:42" beats "I was wondering if you could take a look at the authentication code and fix any issues you might find."
@@ -15,9 +15,9 @@ Note that while this document focuses on AI, there is also coverage on modern en
 
 ## Introduction
 
-At PubNub, we have been using generative coding for a while now. It's changed our landscape dramatically. New tools and techniques have become expected knowledge for Software Engineers in 2026. This reference document is a guide for the new expected knowledge engineers need for success in 2026.
+At PubNub, we have been using generative coding for a while now. It's changed our landscape dramatically. New tools and techniques have become expected knowledge for Software Engineers in 2026. The now expected knowledge engineers need for success in 2026.
 
-You're no longer just writing code—you're directing AI agents that write code for you. This guide provides the practical patterns and prompts you need to ship production-quality software.
+You're no longer just writing code, you're directing AI agents that write code for you. And it's more than just code generation. It's all the common tasks you do as an engineer: documentation, diagrams, commit messages, PR descriptions, test data generation, database migrations, reviews, audits, observabillity, security, and more.
 
 For the overview, see [Quick Start](#quick-start-5-minute-summary). Use the [Table of Contents](#table-of-contents) to jump to specific topics.
 
@@ -214,7 +214,7 @@ cd ../myapp-feature && claude
 
 ## Automate Everything You Do
 
-In 2026, AI doesn't just write code—it handles every artifact in your workflow. If you're doing it manually, you're doing it wrong.
+In 2026, AI doesn't just write code, it handles every artifact in your workflow. If you're doing it manually, you're doing it wrong.
 
 **What to Automate:**
 
@@ -336,7 +336,7 @@ REPEAT:   "Redirect broken on mobile Safari - fix"
 
 ![The AI Reality Check](images/15-the-ai-reality-check.png)
 
-**For non-engineers:** AI seems magical—a senior developer who never sleeps.
+**For non-engineers:** AI seems magical, a senior developer who never sleeps.
 
 **For daily engineers:** You'll see the limits. AI produces plausible code that needs review, doesn't understand your architecture without guidance, and requires discipline for production-quality results. The gap between "runs" and "ships to production" is where expertise matters.
 
@@ -346,7 +346,7 @@ REPEAT:   "Redirect broken on mobile Safari - fix"
 
 Non-engineers see 10,000% improvement (can't build → prototype). Engineers see ~20% boost. Headlines are calibrated for non-engineers. AI amplifies engineers, doesn't replace them.
 
-**Core Philosophy:** Can AI do the work? Yes—code, validation, docs, specs, presentations. But AI hallucinates, so verify critical code and security decisions. Don't vibe-code sensitive apps (fintech, healthcare) without expertise. Human oversight remains essential.
+**Core Philosophy:** Can AI do the work? Yes, code, validation, docs, specs, presentations. But AI hallucinates, so verify critical code and security decisions. Don't vibe-code sensitive apps (fintech, healthcare) without expertise. Human oversight remains essential.
 
 ## Your Role: Director of Agents
 
@@ -604,7 +604,7 @@ I'll continue working on the UI while it runs."
 - No blocking on long operations
 - Parallel workstreams
 - Better use of waiting time
-- Submit prompt, take a break—agents process while you're away
+- Submit prompt, take a break, agents process while you're away
 - 2-day tasks → 4 hours with parallelization
 
 ## Generative Coding Workflow
@@ -1491,7 +1491,7 @@ the current branch to staging. Pause before each destructive action for confirma
 
 ![Agent Memory Architecture](images/11-agent-memory-architecture.png)
 
-Agent memory solves a critical limitation: AI agents lose all context when a conversation ends. For teams, this means every developer starts from zero—re-explaining architecture decisions, coding conventions, and project history. Long-term memory changes this.
+Agent memory solves a critical limitation: AI agents lose all context when a conversation ends. For teams, this means every developer starts from zero, re-explaining architecture decisions, coding conventions, and project history. Long-term memory changes this.
 
 **What to Store:**
 - Architecture summaries and key design decisions
@@ -1507,7 +1507,7 @@ Agent memory solves a critical limitation: AI agents lose all context when a con
 - Search via subagents to keep main context clean and focused
 
 **Team Benefits:**
-- New developers onboard faster—the agent already knows the codebase
+- New developers onboard faster, the agent already knows the codebase
 - Consistent answers across team members
 - Institutional knowledge persists through team changes
 - Reduces repeated explanations of the same architectural decisions
@@ -2383,13 +2383,13 @@ Quality drops after compaction. Keep sessions clean and focused.
 - Run `/clear` often to restart with a new task for best results
 
 ### Best Practices
-- Keep prompts short and direct—verbosity adds noise
+- Keep prompts short and direct, verbosity adds noise
 - Different agents cross-check plans
 - Research in one session, execute in fresh session
 - Markdown > plain text for LLMs
 
 **TOON Format (Optional):**
-Structured format for complex tasks only—simple prompts don't need structure:
+Structured format for complex tasks only, simple prompts don't need structure:
 ```
 [TASK] JWT auth for Express API
 [CONTEXT] PostgreSQL, existing users table
@@ -3146,7 +3146,7 @@ When AI gives different answers to different team members:
 
 ## Closing Thoughts
 
-AI handles more than code—docs, specs, presentations. Keep prompting to improve.
+AI handles more than code, docs, specs, presentations. Keep prompting to improve.
 
 Claude Code is 100% written by Claude Code. Anthropic achieves 4 releases per engineer per day. AI isn't replacing engineers, it's accelerating what each can ship.
 
