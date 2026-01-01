@@ -55,33 +55,24 @@ This guide provides practical workflows, prompting techniques, and best practice
 
 ---
 
-## Technical Topics Covered:
-
-Look at all the things we need to know.
-Most of these topics didn't exist in 2024.
-Note this is a mix of tools, protocols, frameworks, and methodologies.
-Not just focused on AI.
+## Technical Topics Covered
 
 | Category | Concepts |
 |----------|----------|
-| **AI Tools** | Claude Code, Subagents, Background Agents, Skills, Hooks, Slash Commands |
+| **AI Tools** | Claude Code, Subagents, Background Agents, Skills, Hooks |
 | **Protocols** | MCP, A2A, LSP |
-| **Frameworks** | LangChain, LangGraph, Claude Agent SDK, Inngest AgentKit |
-| **Observability** | LangFuse, LangSmith, OpenTelemetry, Grafana, Splunk, PostHog |
+| **Frameworks** | LangChain, LangGraph, Claude Agent SDK |
+| **Observability** | LangFuse, LangSmith, OpenTelemetry |
 | **RAG/Embeddings** | PGVector, Pinecone, Docling, Voyage |
 | **Security** | OWASP, Semgrep, PromptFoo, Guardrails |
-| **Automation** | N8N, Make, Temporal |
-| **Local LLMs** | Ollama, vLLM, LM Studio, llama.cpp |
-| **Code Quality** | Biome, Ruff, TypeScript, Clippy |
-| **Version Control** | Git Worktrees, GitHub CLI |
-| **Methodology** | TDD, 12 Factor, DRY, SRP |
-| **Optimization** | Prompt Caching, Model Routing, OpenRouter |
+| **Optimization** | Prompt Caching, Model Routing |
 | **Languages** | Rust, TypeScript, Python |
-| **Prompt Formats** | TOON, Markdown, CLAUDE.md |
 
 ## Best Tips and Tricks
 
-**Prompting: Keep It Short**
+> Quick-reference tables. See linked sections for details.
+
+**Prompting: Keep It Short** → [Full Guide](#prompting-guidelines)
 | Tip | Why It Works |
 |-----|--------------|
 | One task per prompt | Narrow scope = better results |
@@ -90,7 +81,7 @@ Not just focused on AI.
 | "Follow patterns in src/services/" | Prevents inventing abstractions |
 | End with constraints | "Under 50 lines", "No new deps" |
 
-**Workflow Hacks**
+**Workflow Hacks** → [Generative Coding Workflow](#generative-coding-workflow), [Subagents](#subagents)
 | Hack | Impact |
 |------|--------|
 | Git worktrees per feature | Parallel Claude sessions, no branch switching |
@@ -98,14 +89,14 @@ Not just focused on AI.
 | Subagents for searching | Keeps main context clean and focused |
 | Background agents for tests | Continue working while tests run |
 
-**Cost Savers**
+**Cost Savers** → [Token Optimization](#token-optimization)
 | Technique | Savings |
 |-----------|---------|
 | Prompt caching (long system prompts) | Up to 90% on repeated prefixes |
 | Haiku for quick tasks | 10x cheaper than Opus |
 | Subagents for exploration | Avoids polluting expensive main context |
 
-**Quality Gates**
+**Quality Gates** → [Security](#security), [Code Review](#code-review-with-ai)
 | Gate | Command/Prompt |
 |------|----------------|
 | Security review | `/security-review` or "Review for OWASP top 10" |
@@ -113,7 +104,7 @@ Not just focused on AI.
 | Second opinion | New agent session reviews your diff |
 | Test coverage | "Identify untested code paths" |
 
-**Productivity Multipliers**
+**Productivity Multipliers** → [AI Agents and Skills](#ai-agents-and-skills), [Automate Everything](#automate-everything-you-do)
 | Multiplier | How |
 |------------|-----|
 | Let AI write prompts | Point Claude at a spec, ask it to generate execution prompts |
@@ -121,7 +112,7 @@ Not just focused on AI.
 | Skills for repeated workflows | Teach agents once, reuse forever |
 | The 1% Rule | If even 1% chance a skill applies, invoke it |
 
-**Common Mistakes to Avoid**
+**Common Mistakes to Avoid** → [Context Management](#context-management)
 | Mistake | Fix |
 |---------|-----|
 | Shipping unreviewed AI code | Always diff review before commit |
@@ -156,18 +147,13 @@ PROMPT → REVIEW → SECURE → REDUCE → TEST → SHIP
 
 **Quick Prompting Rules: Short + Direct**
 ```
-SHORT:  "Add logout button to navbar, redirect to /login"
-LONG:   "I need you to add a logout button to the navbar component that when clicked will clear the user session and redirect them to /login"
+GOOD:  "Add logout button to navbar, redirect to /login"
+BAD:   "I need you to add a logout button..."  (too wordy)
 
-DIRECT: "Review for OWASP top 10"
-VAGUE:  "Is this secure?"
-
-NARROW: "Fix the null check in getUserById"
-BROAD:  "Fix the auth system"
-
-SIMPLE: "Follow patterns in src/services/"
-WORDY:  "Please make sure to look at how we do things in src/services/ and follow those same patterns"
+GOOD:  "Fix null check in getUserById"
+BAD:   "Fix the auth system"  (too broad)
 ```
+See [Prompting Guidelines](#prompting-guidelines) for comprehensive examples.
 
 **Example Workflow:**
 ```bash
@@ -201,10 +187,8 @@ cd ../myapp-feature && claude
 4. Security review is mandatory
 5. `/clear` often to keep context clean
 
-**Cost Optimization:**
-- Use prompt caching (90% cost reduction on repeated prefixes)
-- Route simple queries to cheaper models (Haiku for quick tasks)
-- Use subagents for research to keep main context clean
+**Cost Optimization:** See [Token Optimization](#token-optimization) and [Best Tips](#best-tips-and-tricks).
+
 **Jump To:**
 - [Detailed Workflow](#tldr-workflow) - The full PROMPT→SHIP cycle
 - [Claude Code Features](#claude-code-features) - Hooks, slash commands, subagents
@@ -299,25 +283,11 @@ expected outputs, and escalation contacts. Format for quick scanning during inci
 
 ## Introduction
 
-This is a reference guide to the new software engineering practices expected of engineers in 2026. The role has fundamentally shifted: you're no longer just writing code, you're directing AI agents that write code for you.
+At PubNub, we have been using generative coding for a while now. It's changed our landscape dramatically. New tools and techniques have become expected knowledge for Software Engineers in 2026. This reference document is a guide for the new expected knowledge engineers need for success in 2026.
 
-**What's changed:**
-- AI writes the code; you architect, review, and verify
-- Prompting is a core skill—short, direct prompts win
-- Context management determines productivity
-- Multi-agent workflows replace solo coding sessions
-- Security review is non-negotiable for AI-generated code
+You're no longer just writing code—you're directing AI agents that write code for you. This guide provides the practical patterns and prompts you need to ship production-quality software.
 
-**What this guide covers:**
-- **Workflows**: The PROMPT→REVIEW→SECURE→REDUCE→TEST cycle
-- **AI Integration**: Working with Claude Code, subagents, and background agents
-- **Protocols**: MCP for tool access, A2A for agent collaboration, LSP for code intelligence
-- **Development Practices**: TDD with AI, debugging strategies, project planning
-- **Architecture**: RAG, embeddings, agent frameworks, and building AI-powered apps
-- **Production Readiness**: Security, observability, recommended tech stacks
-- **Skills System**: Teaching agents to perform complex workflows reliably
-
-Whether you're transitioning from traditional development or leveling up your AI-assisted workflow, this guide provides the practical patterns and prompts you need to ship production-quality software in 2026.
+For the overview, see [Quick Start](#quick-start-5-minute-summary). Use the [Table of Contents](#table-of-contents) to jump to specific topics.
 
 ## TLDR Workflow
 
@@ -346,11 +316,6 @@ flowchart LR
 6. REPEAT   → Iterate until production-ready
 ```
 
-**Golden Rules:**
-- Never ship unreviewed code
-- Shorter, direct prompts = better results
-- AI writes it, you own it
-
 **Example Prompts (Keep Them Short):**
 ```
 PROMPT:   "Add logout button to navbar. Clear session, redirect to /login"
@@ -365,39 +330,17 @@ REPEAT:   "Redirect broken on mobile Safari - fix"
 
 ![The AI Reality Check](images/15-the-ai-reality-check.png)
 
-**For non-engineers:** AI seems magical. It's a senior developer who never sleeps.
+**For non-engineers:** AI seems magical—a senior developer who never sleeps.
 
-**For daily engineers:** You'll see the limits:
-- Produces plausible code that needs review
-- Doesn't understand your architecture without guidance
-- Optimizes for wrong things without constraints
-- Requires discipline for production-quality results
-
-The gap between "runs" and "ships to production" is where expertise matters.
+**For daily engineers:** You'll see the limits. AI produces plausible code that needs review, doesn't understand your architecture without guidance, and requires discipline for production-quality results. The gap between "runs" and "ships to production" is where expertise matters.
 
 **Productivity Paradox:**
 
 ![Productivity Paradox Visualization](images/02-productivity-paradox-visualization.png)
 
-- Non-engineers see 10,000% improvement (can't build → prototype).
-- Engineers see ~20% boost.
+Non-engineers see 10,000% improvement (can't build → prototype). Engineers see ~20% boost. Headlines are calibrated for non-engineers. AI amplifies engineers, doesn't replace them.
 
-Headlines are calibrated for non-engineers. AI amplifies engineers, doesn't replace them.
-
-## Core Philosophy
-
-**"Can the AI do the work for me? Yes!"**
-
-- AI writes the code
-- AI validates the code
-- AI handles docs, specs, presentations too
-
-## AI Caution
-
-- AI hallucinates and makes mistakes
-- Verify critical code and security decisions
-- Don't vibe-code sensitive apps (fintech, healthcare) without expertise
-- Human oversight remains essential
+**Core Philosophy:** Can AI do the work? Yes—code, validation, docs, specs, presentations. But AI hallucinates, so verify critical code and security decisions. Don't vibe-code sensitive apps (fintech, healthcare) without expertise. Human oversight remains essential.
 
 ## Your Role: Director of Agents
 
@@ -655,13 +598,8 @@ I'll continue working on the UI while it runs."
 - No blocking on long operations
 - Parallel workstreams
 - Better use of waiting time
+- Submit prompt, take a break—agents process while you're away
 - 2-day tasks → 4 hours with parallelization
-
-## Breaks Are Easy Now
-
-- Submit prompt, take a break
-- Background agents process while you're away
-- Parallel subagents: 2-day tasks → 4 hours
 
 ## Generative Coding Workflow
 
@@ -2007,10 +1945,6 @@ Semantic retrieval vs keyword matching. Maps user terms to expected terminology.
 - **Voyage**: When retrieval quality is critical (legal, medical)
 - **nomic-embed-text**: Privacy requirements, high volume, cost-sensitive
 
-## New Skills for 2026
-
-Agents/subagents, prompting, context management, RAG/embeddings, CLI modes, tools/plugins, skills/hooks, MCP, LSP, slash commands, workflows, IDE integrations
-
 ## MCP (Model Context Protocol)
 
 ![MCP Architecture Diagram](images/05-mcp-architecture-diagram.png)
@@ -2439,7 +2373,7 @@ def smart_route(prompt: str, complexity: str = "auto"):
 ### Avoid Compaction
 Quality drops after compaction. Keep sessions clean and focused.
 - Separate sessions for research vs implementation
-- Use subagents to search without polluting main context
+- Use [subagents](#subagents) to search without polluting main context
 - Run `/clear` often to restart with a new task for best results
 
 ### Best Practices
@@ -2463,27 +2397,15 @@ Reference: https://github.com/toon-format/toon
 **Example Prompts for Context Management:**
 ```
 Starting Fresh:
-"New session. I'm continuing work on the auth refactor. Read AUTH_REFACTOR_PLAN.md
-for context, then pick up where the plan indicates we left off."
-
-Using Subagents for Research:
-"Use a subagent to find all places where we handle user sessions. Don't load
-the file contents into this conversation - just give me a summary of locations
-and patterns found."
-
-Cross-Checking with Another Agent:
-"I've created an implementation plan in PLAN.md. Start a new session, have it
-review the plan for issues, then report back concerns without loading full context."
+"New session. Read AUTH_REFACTOR_PLAN.md for context, pick up where we left off."
 
 Preventing Context Bloat:
-"Summarize what we've accomplished so far in 5 bullet points. I'll start a fresh
-session and paste this summary to continue with clean context."
+"Summarize what we've accomplished in 5 bullets. I'll paste to a fresh session."
 
 Delegating to Stay Focused:
-"This debugging is taking us off track. Spawn a subagent to investigate the
-caching issue and write findings to CACHE_DEBUG.md. We'll continue with the
-main feature work."
+"Spawn a subagent to investigate the caching issue. Write findings to CACHE_DEBUG.md."
 ```
+See [Subagents](#subagents) for more examples of delegating work.
 
 ## Building AI Apps
 
@@ -3216,15 +3138,11 @@ When AI gives different answers to different team members:
 - Workflow diagrams
 - Gemini Flash 3 draws full pictures
 
-## Beyond Code
+## Closing Thoughts
 
-Docs, specs, presentations. Keep prompting to improve.
+AI handles more than code—docs, specs, presentations. Keep prompting to improve.
 
-## The Future is Now
-
-Claude Code is 100% written by Claude Code. Anthropic achieves 4 releases per engineer per day.
-
-AI isn't replacing engineers, it's accelerating what each can ship.
+Claude Code is 100% written by Claude Code. Anthropic achieves 4 releases per engineer per day. AI isn't replacing engineers, it's accelerating what each can ship.
 
 ## Resources
 
