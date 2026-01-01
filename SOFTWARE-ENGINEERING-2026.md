@@ -8,12 +8,11 @@ Are you already behind? Probably! Let's fix that.
  - AI should be reading the code to validate work
  - AI should be more than just code, your docs, specs, presentations
 
-## Local LLMS
-TODO fill out
- - GPT OSS
- - Kimi K2
- - MiniMax
- - DeepSeek
+## AI Religion - Don't oversubscribe to AI
+TODO fill in
+Don't use AI to DDoS social reality
+We have to be diligent and careful to not when using AI.
+Always retain your judgement and critical thinking skills.
 
 ## You Engineering Experties is needed more than ever
 Now that the typing and manual clicking on your computer is mostly solved by AI, your role as an engineer is shifting.
@@ -122,6 +121,10 @@ This is how Claude Code is built as mentioned above.
 ## Different AI Models and Tools
 
 - Brokk / Claude Code / Codex / Gemini / etc.
+mention strengths and keeping on top of the best model of the day
+
+## Github CLI
+gh tool in Claude Code so it automates all my github work including setting up CI/CD and whatnot. `brew install gh`
 
 ## More Than Just Coding
 
@@ -141,6 +144,7 @@ AI models enhanced by retrieving relevant context from external sources (codebas
 Skills in 2026 that go beyond traditional programming:
 
 - Agents and subagents
+  -  use a coding agents subagents feature - so for example, work that would take 2 days sequentially would take 4 hours with parallel subagents spawn by claude
 - Prompting
 - Context management
 - RAG patterns and embeddings
@@ -162,6 +166,18 @@ Skills in 2026 that go beyond traditional programming:
 ## Resources
 
 - [Spec Driven Development - GitHub Spec Kit](https://github.com/github/spec-kit)
+
+## Local LLMS
+TODO fill out
+ - GPT OSS
+ - Kimi K2
+ - MiniMax
+ - DeepSeek
+
+
+## Agents and Size Matters
+smaller faster agents are better for many tasks
+tradeoff of speed vs accuracy
 
 
 ## Fringe AI with AI powered Operations
