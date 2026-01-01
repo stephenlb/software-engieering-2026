@@ -1,14 +1,27 @@
 # Software Engineering in 2026
 
+> by Stephen Blum CTO, PubNub. Engineering for 25 years.
+
 Are you already behind? Probably! Let's fix that.
 
 In 2026, software engineering has fundamentally changed.
 AI agents write the code; you direct, review, and ship.
 This guide provides practical workflows, prompting techniques, and best practices to thrive as a Director of Agents.
 
-> **Note that this is a reference guide for 2026.** Rather than a tutorial about everything you need to know, it's a practical reference for working effectively with AI coding assistants in a production environment.
+**The #1 prompting rule: Keep it short.**
+Direct beats verbose. "Fix null check in auth.ts:42" beats "I was wondering if you could take a look at the authentication code and fix any issues you might find."
 
-> **The #1 prompting rule: Keep it short.** Direct beats verbose. "Fix null check in auth.ts:42" beats "I was wondering if you could take a look at the authentication code and fix any issues you might find."
+Note that while this document focuses on AI, there is also coverage on modern engineering practices, tools, and protocols that have become standard in 2026. Also lots of Rust.
+
+## Introduction
+
+At PubNub, we have been using generative coding for a while now. It's changed our landscape dramatically. New tools and techniques have become expected knowledge for Software Engineers in 2026. This reference document is a guide for the new expected knowledge engineers need for success in 2026.
+
+You're no longer just writing code—you're directing AI agents that write code for you. This guide provides the practical patterns and prompts you need to ship production-quality software.
+
+For the overview, see [Quick Start](#quick-start-5-minute-summary). Use the [Table of Contents](#table-of-contents) to jump to specific topics.
+
+Also don't miss the [Best Tips and Tricks](#best-tips-and-tricks) section for quick-reference tables of the most effective techniques.
 
 ---
 
@@ -280,14 +293,6 @@ expected outputs, and escalation contacts. Format for quick scanning during inci
 **The 2026 Rule:** If you're doing the same task more than twice, automate it with AI.
 
 ---
-
-## Introduction
-
-At PubNub, we have been using generative coding for a while now. It's changed our landscape dramatically. New tools and techniques have become expected knowledge for Software Engineers in 2026. This reference document is a guide for the new expected knowledge engineers need for success in 2026.
-
-You're no longer just writing code—you're directing AI agents that write code for you. This guide provides the practical patterns and prompts you need to ship production-quality software.
-
-For the overview, see [Quick Start](#quick-start-5-minute-summary). Use the [Table of Contents](#table-of-contents) to jump to specific topics.
 
 ## TLDR Workflow
 
