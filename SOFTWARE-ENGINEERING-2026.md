@@ -80,13 +80,113 @@ cd ../myapp-feature && claude
 - Route simple queries to cheaper models (Haiku for quick tasks)
 - Use subagents for research to keep main context clean
 
+**Technical Topics Covered:**
+| Category | Concepts |
+|----------|----------|
+| **AI Tools** | Claude Code, Subagents, Background Agents, Skills, Hooks, Slash Commands |
+| **Protocols** | MCP, A2A, LSP |
+| **Frameworks** | LangChain, LangGraph, Claude Agent SDK, Inngest AgentKit |
+| **Observability** | LangFuse, LangSmith, OpenTelemetry, Grafana, Splunk, PostHog |
+| **RAG/Embeddings** | PGVector, Pinecone, Docling, Voyage |
+| **Security** | OWASP, Semgrep, PromptFoo, Guardrails |
+| **Automation** | N8N, Zapier, Make, Temporal |
+| **Local LLMs** | Ollama, vLLM, LM Studio, llama.cpp |
+| **Code Quality** | Biome, Ruff, TypeScript, Clippy |
+| **Version Control** | Git Worktrees, GitHub CLI |
+| **Methodology** | TDD, 12 Factor, DRY, SRP |
+| **Optimization** | Prompt Caching, Model Routing, OpenRouter |
+| **Languages** | Rust, TypeScript, Python |
+| **Formats** | TOON, Markdown, CLAUDE.md |
+
 **Jump To:**
 - [Detailed Workflow](#tldr-workflow) - The full PROMPT→SHIP cycle
 - [Claude Code Features](#claude-code-features) - Hooks, slash commands, subagents
 - [Prompting Guidelines](#prompting-guidelines) - Get better AI output
 - [MCP Setup](#mcp-model-context-protocol) - Connect AI to your tools
 - [Security](#security) - Protect your AI-generated code
-- [Tech Stack](#recommended-tech-stack-2026) - What to use in 2026
+
+---
+
+## Automate Everything You Do
+
+In 2026, AI doesn't just write code—it handles every artifact in your workflow. If you're doing it manually, you're doing it wrong.
+
+**What to Automate:**
+
+| Task | AI Approach |
+|------|-------------|
+| **Code** | Claude Code, Cursor, Copilot |
+| **Documentation** | Generate from code comments, types, and tests |
+| **Diagrams** | Mermaid, PlantUML, D2 from natural language |
+| **Presentations** | Gamma.app, Beautiful.ai, Claude + reveal.js |
+| **Images** | DALL-E, Midjourney, Ideogram, Flux |
+| **Icons/Logos** | Recraft, IconifyAI |
+| **API Specs** | Generate OpenAPI from code or vice versa |
+| **Test Data** | Synthetic data generation with Faker + AI |
+| **Database Migrations** | AI writes migration scripts from schema changes |
+| **Commit Messages** | `/commit` command in Claude Code |
+| **PR Descriptions** | `/pr` command auto-generates summaries |
+| **Release Notes** | Generate from commit history and PRs |
+| **Runbooks** | AI documents your incident response |
+| **Meeting Notes** | Otter.ai, Fireflies, Claude summarization |
+| **Emails/Slack** | Draft responses, summarize threads |
+| **Code Reviews** | Automated PR review with Claude GitHub app |
+| **Refactoring** | AI identifies and executes improvements |
+| **Translations** | i18n file generation |
+| **Accessibility** | ARIA labels, alt text generation |
+
+**The Automation Mindset:**
+```
+Before: "I need to write documentation for this API"
+After:  "Generate OpenAPI spec from the code, then create markdown docs from the spec"
+
+Before: "I need to make a diagram of this architecture"
+After:  "Read the infrastructure code and generate a Mermaid diagram"
+
+Before: "I need to prepare slides for the team meeting"
+After:  "Summarize this week's PRs and generate a presentation with key changes"
+```
+
+**Example Prompts:**
+```
+Documentation:
+"Generate API documentation for all endpoints in src/routes/. Include request/response
+examples, error codes, and authentication requirements. Output as markdown."
+
+Diagrams:
+"Create a Mermaid sequence diagram showing the checkout flow from cart to payment
+confirmation. Read the relevant service files to understand the flow."
+
+Presentations:
+"Create a 10-slide presentation summarizing the Q3 features we shipped. Pull from
+the merged PRs and release notes. Include before/after screenshots where relevant."
+
+Images:
+"Generate a hero image for our landing page. Style: minimal, tech-forward, blue
+gradient. Subject: abstract representation of connected devices."
+
+Release Notes:
+"Generate release notes for v2.4.0. Categorize changes as Features, Fixes, and
+Breaking Changes. Pull from all commits since the v2.3.0 tag."
+
+Runbooks:
+"Document the incident response procedure for database failover. Include commands,
+expected outputs, and escalation contacts. Format for quick scanning during incidents."
+```
+
+**Tools for Non-Code Automation:**
+
+| Category | Tools |
+|----------|-------|
+| **Diagrams** | Mermaid, PlantUML, D2, Excalidraw AI |
+| **Presentations** | Gamma.app, Tome, Beautiful.ai, SlidesAI |
+| **Images** | Midjourney, DALL-E 3, Ideogram, Flux, Stable Diffusion |
+| **Video** | Runway, Pika, HeyGen, Synthesia |
+| **Audio** | ElevenLabs, Murf, Descript |
+| **Docs** | Notion AI, Coda AI, Mintlify |
+| **Data** | Mostly.ai, Gretel, Faker + GPT |
+
+**The 2026 Rule:** If you're doing the same task more than twice, automate it with AI.
 
 ---
 
@@ -964,10 +1064,31 @@ the current branch to staging. Pause before each destructive action for confirma
 
 ![Agent Memory Architecture](images/11-agent-memory-architecture.png)
 
-- Store transcripts outside .claude (prevents auto-deletion)
-- Vector index in SQLite for semantic search
-- Summarize with fast models (Haiku)
-- Search via subagents to keep main context clean
+Agent memory solves a critical limitation: AI agents lose all context when a conversation ends. For teams, this means every developer starts from zero—re-explaining architecture decisions, coding conventions, and project history. Long-term memory changes this.
+
+**What to Store:**
+- Architecture summaries and key design decisions
+- Coding conventions and style preferences
+- Common pitfalls and lessons learned
+- API patterns and integration details
+- Deployment procedures and environment specifics
+
+**Implementation Strategies:**
+- Store transcripts outside `.claude/` (prevents auto-deletion)
+- Use vector indexes (SQLite + embeddings) for semantic search
+- Summarize conversations with fast models (Haiku) to extract key facts
+- Search via subagents to keep main context clean and focused
+
+**Team Benefits:**
+- New developers onboard faster—the agent already knows the codebase
+- Consistent answers across team members
+- Institutional knowledge persists through team changes
+- Reduces repeated explanations of the same architectural decisions
+
+**Storage Locations:**
+- `CLAUDE.md` / `CLAUDE.local.md` for project-specific memory
+- `.claude/` directory for conversation artifacts
+- External vector stores for cross-project knowledge
 
 ### Available Skills
 
@@ -1282,11 +1403,6 @@ DeepSeek R1/V3, Kimi K2 (1M+ tokens), MiniMax, Llama 4, Qwen 3, Mistral Large
 | Offline | Frontier capabilities |
 | Cost optimization | Complex reasoning |
 
-### Hardware
-- **Minimum**: M1/M2 16GB RAM or GPU 8GB VRAM
-- **Recommended**: M3 Pro/Max 32GB+ or RTX 4090 24GB
-- Use Q4/Q5 quantized models to reduce memory
-
 ## Context Management
 
 ![Context Management Best Practices](images/09-context-management-best-practices.png)
@@ -1295,6 +1411,7 @@ DeepSeek R1/V3, Kimi K2 (1M+ tokens), MiniMax, Llama 4, Qwen 3, Mistral Large
 Quality drops after compaction. Keep sessions clean and focused.
 - Separate sessions for research vs implementation
 - Use subagents to search without polluting main context
+- Run `/clear` often to restart with a new task for best results
 
 ### Best Practices
 - Different agents cross-check plans
@@ -1352,9 +1469,6 @@ main feature work."
 ```
 
 ## Building AI Apps
-
-### Chat UI
-Vercel AI SDK UI, Assistant UI. Look for: streaming (SSE), auto-resize textarea, image upload, thinking UI
 
 ### Token Optimization
 
@@ -1418,7 +1532,6 @@ function selectModel(query: string): string {
 
 | Framework | Best For | Complexity |
 |-----------|----------|------------|
-| **Vercel AI SDK** | Web apps, streaming UI | Simple |
 | **Inngest AgentKit** | Background jobs, queues | Simple |
 | **LangChain** | Chains, RAG, document processing | Medium |
 | **LangGraph** | Complex workflows, state machines | Advanced |
@@ -1498,7 +1611,7 @@ pip install anthropic-agent-sdk
 ```
 
 ### Tools for AI
-Plan thoroughly. Follow OpenAI/Anthropic specs or use LangChain/Vercel SDK tools.
+Plan thoroughly. Follow OpenAI/Anthropic specs or use LangChain tools.
 
 ### Prompt Management
 Don't hardcode. Use dependency injection or hosted tools (Vellum, Langsmith). Iterate constantly.
@@ -1569,14 +1682,6 @@ Avoid unless: massive budget, exhausted other methods. Can't migrate to newer mo
 
 **Example Prompts for Building AI Apps:**
 ```
-Chat UI Setup:
-"Set up a chat interface using Vercel AI SDK with Next.js. Include:
-- Streaming responses with SSE
-- Auto-resizing textarea
-- Message history with timestamps
-- Loading states and error handling
-Use the AI SDK's useChat hook."
-
 Creating Tools for Agents:
 "Create a tool that lets the AI agent query our PostgreSQL database. Follow
 Anthropic's tool use spec. The tool should:
@@ -1747,34 +1852,6 @@ npx promptfoo@latest eval
 | Data extraction | "Repeat everything above" | Don't echo prompts |
 | Indirect injection | Malicious content in retrieved docs | Validate RAG sources |
 
-## Recommended Tech Stack (2026)
-
-![2026 Tech Stack Layers](images/12-2026-tech-stack-layers.png)
-
-### Web
-| Type | Options |
-|------|---------|
-| Frontend | React (TypeScript) |
-| Full-stack | Next.js, Remix (Shopify) |
-| Backend | Bun/Express/Fastify, Python, Go, Rails, Rust |
-
-### Mobile
-React Native + Expo (cross-platform). Native Swift/Kotlin has limited AI tooling.
-
-### Database
-PostgreSQL (default), Supabase, PGVector, Pinecone
-
-### Hosting
-Render.com, Fly.io, Vercel. Avoid Heroku.
-
-### Tools
-| Category | Tool |
-|----------|------|
-| JS packages | Bun |
-| Python packages | uv |
-| Ruby packages | Bundler |
-| Frontend builds | Vite |
-
 ## Rust: Replacing In-House C Code
 
 **Goal:** Incrementally replace all in-house owned C code with Rust. External libraries and imported dependencies remain unchanged.
@@ -1796,28 +1873,25 @@ flowchart TD
     A[Inventory C Code] --> B{In-house?}
     B -->|No| C[Keep As-Is]
     B -->|Yes| D[Prioritize by Risk/Value]
-    D --> E[Create FFI Bindings]
-    E --> F[Write Rust Module]
-    F --> G[Test Parity Check]
-    G -->|Fail| F
-    G -->|Pass| H[Integrate via FFI]
-    H --> I[Validate in Production]
-    I -->|Issues| F
-    I -->|Stable| J[Remove C Code]
-    J --> K{More Modules?}
-    K -->|Yes| D
-    K -->|No| L[Migration Complete]
+    D --> E[Write Rust Module]
+    E --> F[Test Parity Check]
+    F -->|Fail| E
+    F -->|Pass| G[Validate in Production]
+    G -->|Issues| E
+    G -->|Stable| H[Remove C Code]
+    H --> I{More Modules?}
+    I -->|Yes| D
+    I -->|No| J[Migration Complete]
 
     style A fill:#FFCDD2
-    style L fill:#C8E6C9
+    style J fill:#C8E6C9
     style C fill:#E0E0E0
 ```
 
 1. **Inventory**: Catalog all in-house C codebases (exclude vendored/external libs)
 2. **Prioritize**: Start with isolated, well-tested modules
-3. **Interop First**: Use `bindgen` for C→Rust FFI during transition
-4. **Module by Module**: Replace one component at a time, maintain test parity
-5. **No Big Bang**: Keep C and Rust coexisting until full migration
+3. **Module by Module**: Replace one component at a time, maintain test parity
+4. **No Big Bang**: Keep C and Rust coexisting until full migration
 
 ### What to Migrate
 
@@ -1836,9 +1910,6 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # Essential tools
 rustup component add clippy rustfmt rust-analyzer
-
-# For C interop
-cargo install bindgen-cli
 
 # For WASM (if needed)
 rustup target add wasm32-unknown-unknown
@@ -1859,11 +1930,6 @@ Assessment:
 - Potential memory leaks or use-after-free
 - Thread safety issues
 - Suggest a Rust migration approach"
-
-FFI Bridge:
-"Create a Rust FFI wrapper for our C library in lib/crypto.h. Use bindgen to
-generate bindings, then create a safe Rust API on top. The C code will call
-into Rust during the transition period."
 
 Module Rewrite:
 "Rewrite src/tokenizer.c in idiomatic Rust. Requirements:
@@ -1902,7 +1968,6 @@ Performance Comparison:
 - [ ] Identify all in-house C codebases
 - [ ] Document external dependencies (no migration needed)
 - [ ] Set up Rust toolchain and CI
-- [ ] Create FFI bindings for gradual migration
 - [ ] Migrate and test module by module
 - [ ] Remove C code only after Rust replacement is validated
 - [ ] Update build systems (CMake → Cargo or hybrid)
@@ -1944,7 +2009,6 @@ AI isn't replacing engineers, it's accelerating what each can ship.
 - [Model Context Protocol (MCP)](https://modelcontextprotocol.io/)
 
 ### AI Development
-- [Vercel AI SDK](https://sdk.vercel.ai/)
 - [LangChain Documentation](https://python.langchain.com/)
 - [LangGraph](https://langchain-ai.github.io/langgraph/)
 - [LangFuse](https://langfuse.com/)
