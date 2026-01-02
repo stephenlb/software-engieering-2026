@@ -23,6 +23,12 @@ For the overview, see [Quick Start](#quick-start-5-minute-summary). Use the [Tab
 
 Also don't miss the [Best Tips and Tricks](#best-tips-and-tricks) section for quick-reference tables of the most effective techniques.
 
+## General Expections for SWE in 2026
+
+1. AI writes the code
+2. AI reads the code
+3. Use Rust
+
 ---
 
 ## Table of Contents
